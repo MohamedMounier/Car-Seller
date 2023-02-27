@@ -55,7 +55,7 @@ class _EditableInfoFieldState extends State<EditableInfoField> {
       decoration: InputDecoration(
           prefixIcon:Icon(widget.iconName) ,
           prefixIconColor: ColorManager.primary,
-          suffix: widget.trailing ?? const SizedBox(),
+          suffix: widget.trailing ??  null,
           suffixIcon: widget.isPassword!?widget.passwordIcon:SizedBox(),
           hintText: widget.hint,
           hintStyle: Theme.of(context).textTheme.bodyText2!.copyWith(

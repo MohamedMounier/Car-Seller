@@ -25,6 +25,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc(this.registerUserUseCase,this.logUserInUseCase,this.appPrefrences) : super(LoginState()) {
     on<LoginEventLogUserIn>(onLogin);
     on<LoginSaveUserCheck>(onSaveLogin);
+    on<SaveUserUidEvent>(onSaveUserUid);
     on<RememberMeEvent>(onChangeRememberMe);
     on<ShowPasswordEvent>(onShowPassword);
   }
@@ -35,26 +36,35 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     result.fold(
             (l) => emit(state.copyWith(
             loginErrorMessage: l.errorMessage,requestState: RequestState.isError)),
-            (r) => emit(state.copyWith(requestState: RequestState.isSucc)));
+            (r) => emit(state.copyWith(user: r,requestState: RequestState.isSucc)));
   }
 
   FutureOr<void> onSaveLogin(LoginSaveUserCheck event, Emitter<LoginState> emit)async {
     var result = await appPrefrences.saveLogin(event.checkSearch!);
     result.fold((l) {
-      emit(state.copyWith(loginErrorMessage: l.errorMessage));
+      emit(state.copyWith(requestState:RequestState.isError,loginErrorMessage: l.errorMessage));
     }, (r) {
-      emit(state.copyWith(isUserSaved: event.checkSearch));
+      emit(state.copyWith(isUserSaved: event.checkSearch,requestState: RequestState.isNone));
+
+    });
+  }
+  FutureOr<void> onSaveUserUid(SaveUserUidEvent event, Emitter<LoginState> emit)async {
+    var result = await appPrefrences.saveUserUid(event.userUid!);
+    result.fold((l) {
+      emit(state.copyWith(requestState: RequestState.isError,loginErrorMessage: l.errorMessage));
+    }, (r) {
+      emit(state.copyWith(userUid: event.userUid));
 
     });
   }
 
 
   FutureOr<void> onShowPassword(ShowPasswordEvent event, Emitter<LoginState> emit) {
-    emit(state.copyWith(isPasswordVisible: event.isPasswordVisible =!event.isPasswordVisible!));
+    emit(state.copyWith(isPasswordVisible: event.isPasswordVisible =!event.isPasswordVisible!,requestState: RequestState.isNone));
   }
 
   FutureOr<void> onChangeRememberMe(RememberMeEvent event, Emitter<LoginState> emit) {
-    emit(state.copyWith(isUserSaved: event.isRememberUser));
+    emit(state.copyWith(isUserSaved: event.isRememberUser,requestState: RequestState.isNone));
   }
 }
 

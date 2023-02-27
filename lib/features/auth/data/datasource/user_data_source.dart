@@ -11,7 +11,7 @@ import 'package:voomeg/features/auth/domain/entities/user_entity.dart';
 
 abstract class BaseUserRemoteDataSorce {
   Future<UserModel>getUser();
-  Future<void>logUserIn({required LoginModel loginModel});
+  Future<UserCredential>logUserIn({required LoginModel loginModel});
   Future<void>logUserOut();
   Future<UserCredential>createUser({required String email,required String password});
   Future<void>addUser(UserModel userModel);
@@ -33,8 +33,8 @@ class UserRemoteDataSource implements BaseUserRemoteDataSorce{
   }
 
   @override
-  Future<void> logUserIn({required LoginModel loginModel})async {
-    await firebaseAuth.signInWithEmailAndPassword(email: loginModel.email, password: loginModel.password);
+  Future<UserCredential> logUserIn({required LoginModel loginModel})async {
+  return  await firebaseAuth.signInWithEmailAndPassword(email: loginModel.email, password: loginModel.password);
 
   }
 

@@ -23,6 +23,14 @@ class LoginSaveUserCheck extends LoginEvent {
   @override
   List<Object> get props => [checkSearch!];
 }
+class SaveUserUidEvent extends LoginEvent {
+  String? userUid;
+
+   SaveUserUidEvent(this.userUid);
+
+  @override
+  List<Object> get props => [userUid!];
+}
 class ShowPasswordEvent extends LoginEvent {
   bool? isPasswordVisible;
 
@@ -32,9 +40,9 @@ class ShowPasswordEvent extends LoginEvent {
   List<Object> get props => [isPasswordVisible!];
 }
 class RememberMeEvent extends LoginEvent {
-  bool? isRememberUser;
+ final bool? isRememberUser;
 
-  RememberMeEvent(this.isRememberUser);
+  const RememberMeEvent(this.isRememberUser);
 
   @override
   List<Object> get props => [isRememberUser!];

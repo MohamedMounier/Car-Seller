@@ -56,12 +56,13 @@ class UserRepo implements BaseUserRepo {
   }
 
   @override
-  Future<Either<Failure, void>> logUserIn(
+  Future<Either<Failure, UserCredential>> logUserIn(
       {required LoginEntity loginEntity}) async {
     try {
-      return Right(await baseUserRemoteDataSorce.logUserIn(
+      var user = await baseUserRemoteDataSorce.logUserIn(
           loginModel: LoginModel(
-              email: loginEntity.email, password: loginEntity.password)));
+              email: loginEntity.email, password: loginEntity.password));
+      return Right(user);
     } on FirebaseAuthException catch (authError) {
       return Left(ServerFailure(authError.message??'Error'));
     }catch (error){

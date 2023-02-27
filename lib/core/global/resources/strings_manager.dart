@@ -2,9 +2,11 @@ class StringsManager{
   static const String noRouteFound='NoRouteFound';
   //on boarding titles
   static const String isLoginSaved='isLoginSaved';
+  static const String userUid='userUid';
+
   static const String onBoardingTitle2='NoRouteFound 2';
   static const String onBoardingTitle3='NoRouteFound 3';
-  static const String onBoardingTitle4='NoRouteFound 4';
+
   // onboarding subtitle 1
   static const String onBoardingSubTitle1='shop like a pro !';
   static const String onBoardingSubTitle2='NoRouteFound sub 2';

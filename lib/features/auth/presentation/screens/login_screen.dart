@@ -59,8 +59,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Successfully Logged in ...')));
-                Navigator.pushReplacementNamed(context, AppRoutesName.home);
                 _loginBloc.add(LoginSaveUserCheck(state.isUserSaved));
+                _loginBloc.add(SaveUserUidEvent(state.user!.user!.uid));
+                Navigator.pushReplacementNamed(context, AppRoutesName.home);
+
 
               } else if (state.requestState == RequestState.isLoading) {
                 showDialog(

@@ -23,4 +23,22 @@ class AppPrefrences {
       return Left(LocalDatabaseFailuer(error.toString()));
     }
   }
+  Future<Either<Failure, bool>> saveUserUid(String uid) async {
+    try {
+      final isSaved =
+      await _sharedPreferences.setString(StringsManager.userUid,uid??'');
+      return Right(isSaved);
+    } catch (error) {
+      return Left(LocalDatabaseFailuer(error.toString()));
+    }
+  }
+ Either<Failure, String> getUserID()  {
+    try {
+      final userUid =
+       _sharedPreferences.getString(StringsManager.userUid);
+      return Right(userUid!);
+    } catch (error) {
+      return Left(LocalDatabaseFailuer(error.toString()));
+    }
+  }
 }
