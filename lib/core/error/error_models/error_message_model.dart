@@ -1,23 +1,22 @@
 import 'package:equatable/equatable.dart';
 
 class ErrorMessageModel extends Equatable {
-  final String statusMessage;
-  final int statusCode;
-  final bool isSuccess;
+  final String message;
+  final String code;
 
-  const ErrorMessageModel({required this.statusMessage,
-    required this.statusCode,
-    required this.isSuccess});
+  const ErrorMessageModel({required this.message,
+    required this.code,
+   });
 
-  factory ErrorMessageModel.fromJson(Map<String, dynamic>json){
+  factory ErrorMessageModel.fromError({String? message,String? code}){
     return ErrorMessageModel(
-        statusMessage: json["status_message"],
-        statusCode: json["status_code"],
-        isSuccess: json["success"]);
+        message:message??"kindly reopen the application",
+        code: code??'internet connection error',
+     );
   }
 
   @override
-  List<Object> get props => [statusMessage, statusCode, isSuccess];
+  List<Object> get props => [message, code];
 }
 
 class LocalDataBaseErrorModel extends Equatable {
