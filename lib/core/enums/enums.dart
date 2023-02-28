@@ -13,6 +13,21 @@ enum RegisterSteps{
   isNotAddedUser
 }
 
+enum AddCarRequestSteps{
+  isNone,
+  isDoneSucc,
+  isChoosingPic,
+ isUploadingPic,
+ isUploadedPicSucc,
+ isUploadedPicError,
+ isFetchingUrl,
+ isFetchedUrlSucc,
+ isFetchedUrlError,
+ isAddingPicToDb,
+ isAddedPicToDBSucc,
+ isAddedPicToDBError,
+}
+
 enum TextValidator{
   email,
   password,

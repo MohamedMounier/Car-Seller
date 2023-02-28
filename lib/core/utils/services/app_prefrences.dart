@@ -3,10 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voomeg/core/error/failure.dart';
 import 'package:voomeg/core/global/resources/strings_manager.dart';
 
-class AppPrefrences {
+class AppPreferences {
   final SharedPreferences _sharedPreferences;
 
- const AppPrefrences(this._sharedPreferences);
+ const AppPreferences(this._sharedPreferences);
 
   bool isLoginSaved() {
     bool? isSaved =
@@ -26,7 +26,7 @@ class AppPrefrences {
   Future<Either<Failure, bool>> saveUserUid(String uid) async {
     try {
       final isSaved =
-      await _sharedPreferences.setString(StringsManager.userUid,uid??'');
+      await _sharedPreferences.setString(StringsManager.userUid,uid);
       return Right(isSaved);
     } catch (error) {
       return Left(LocalDatabaseFailuer(error.toString()));

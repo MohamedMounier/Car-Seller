@@ -3,6 +3,7 @@ import 'package:voomeg/core/global/resources/strings_manager.dart';
 import 'package:voomeg/core/global/routes/app_routes_names.dart';
 import 'package:voomeg/features/auth/presentation/screens/login_screen.dart';
 import 'package:voomeg/features/auth/presentation/screens/register_screen.dart';
+import 'package:voomeg/features/bids/presentation/screens/add_car_screen.dart';
 import 'package:voomeg/features/bids/presentation/screens/home_screen.dart';
 
 class AppRouter {
@@ -14,6 +15,8 @@ static Route<dynamic> onGenerateRoutes (RouteSettings settings){
       return MaterialPageRoute(builder: (_)=> RegisterScreen());
     case AppRoutesName.home:
       return MaterialPageRoute(builder: (_)=> HomeScreen());
+    case AppRoutesName.addCar:
+      return MaterialPageRoute(builder: (_)=> AddCarScreen());
     default :
       return undefinedRoute();
 

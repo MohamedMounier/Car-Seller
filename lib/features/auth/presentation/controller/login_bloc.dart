@@ -8,10 +8,8 @@ import 'package:meta/meta.dart';
 import 'package:voomeg/core/enums/enums.dart';
 import 'package:voomeg/core/utils/services/app_prefrences.dart';
 import 'package:voomeg/features/auth/domain/entities/login.dart';
-import 'package:voomeg/features/auth/domain/entities/user_entity.dart';
 import 'package:voomeg/features/auth/domain/usecases/log_user_in_use_case.dart';
 import 'package:voomeg/features/auth/domain/usecases/register_user_use_case.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_event.dart';
 
@@ -20,7 +18,7 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final RegisterUserUseCase registerUserUseCase;
   final LogUserInUseCase logUserInUseCase;
-  final AppPrefrences appPrefrences;
+  final AppPreferences appPrefrences;
 
   LoginBloc(this.registerUserUseCase,this.logUserInUseCase,this.appPrefrences) : super(LoginState()) {
     on<LoginEventLogUserIn>(onLogin);

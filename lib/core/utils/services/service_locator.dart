@@ -10,6 +10,14 @@ import 'package:voomeg/features/auth/domain/usecases/log_user_in_use_case.dart';
 import 'package:voomeg/features/auth/domain/usecases/register_user_use_case.dart';
 import 'package:voomeg/features/auth/presentation/controller/login_bloc.dart';
 import 'package:voomeg/features/auth/presentation/controller/register_bloc.dart';
+import 'package:voomeg/features/bids/data/datasource/remote_bids_data_source.dart';
+import 'package:voomeg/features/bids/data/repository/car_for_sale_repo.dart';
+import 'package:voomeg/features/bids/domain/repository/base_car_for_sale_repo.dart';
+import 'package:voomeg/features/bids/domain/usecases/add_car_to_database_use_case.dart';
+import 'package:voomeg/features/bids/domain/usecases/get_image_url_use_case.dart';
+import 'package:voomeg/features/bids/domain/usecases/upload_images_use_case.dart';
+import 'package:voomeg/features/bids/presentation/controller/add_car_for_sale_bloc.dart';
+import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
 
 final sl=GetIt.instance;
 
@@ -19,12 +27,14 @@ class ServiceLocator{
     /// prefrence
     final sharedPrefs = await SharedPreferences.getInstance();
     sl.registerLazySingleton<SharedPreferences>(() => sharedPrefs);
-    sl.registerLazySingleton<AppPrefrences>(() => AppPrefrences(sl()));
+    sl.registerLazySingleton<AppPreferences>(() => AppPreferences(sl()));
 
 
     ///blocs
      sl.registerFactory(() => RegisterBloc(sl(), sl()));
      sl.registerFactory(() => LoginBloc(sl(), sl(),sl()));
+     sl.registerFactory(() => HomeBloc(sl()));
+     sl.registerFactory(() => AddCarForSaleBloc(sl(),sl(),sl()));
     // sl.registerFactory(() => TvBloc(sl()));
 
     ///useCases
@@ -37,12 +47,18 @@ class ServiceLocator{
 
     sl.registerLazySingleton<RegisterUserUseCase>(() => RegisterUserUseCase(sl()));
 
+    sl.registerLazySingleton<UploadImagesUSeCase>(() => UploadImagesUSeCase(sl()));
+    sl.registerLazySingleton<GetImageUrlUseCase>(() => GetImageUrlUseCase(sl()));
+    sl.registerLazySingleton<AddCarToDatabaseUseCase>(() => AddCarToDatabaseUseCase(sl()));
+
     ///Repository
     sl.registerLazySingleton<BaseUserRepo>(() => UserRepo(sl()));
+    sl.registerLazySingleton<BaseCarForSaleRepo>(() => CarForSaleRepo(sl()));
      //sl.registerLazySingleton<BaseTvRepo>(() => TvRepo(sl()));
 
     ///DataSource
      sl.registerLazySingleton<BaseUserRemoteDataSorce>(() => UserRemoteDataSource());
+     sl.registerLazySingleton<BaseBidsRemoteDataSource>(() => BidsRemoteDataSource());
     // sl.registerLazySingleton<BaseTvRemoteDataSource>(() => TvRemoteDataSource());
   }
 }
