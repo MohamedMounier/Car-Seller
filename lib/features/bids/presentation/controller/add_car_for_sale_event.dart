@@ -21,16 +21,6 @@ class AddCarEvent extends AddCarForSaleEvent {
         saleId,
       ];
 }
-// class AddCarEvent extends AddCarForSaleEvent {
-//   final CarForSale carForSale;
-//   final double circularColorValue;
-//   final int uploadPercent;
-//
-//   const AddCarEvent(this.carForSale,this.circularColorValue,this.uploadPercent);
-//
-//   @override
-//   List<Object> get props => [carForSale,circularColorValue,uploadPercent];
-// }
 
 class ChoosePicturesEvent extends AddCarForSaleEvent {
   final List<XFile> chosenImages;
@@ -50,27 +40,3 @@ class AddCatToDbEvent extends AddCarForSaleEvent {
   @override
   List<Object> get props => [carForSale];
 }
-
-// class UploadPicEvent extends AddCarForSaleEvent {
-//   final String saleId;
-//   final double circularColorValue;
-//   final int uploadPercent;
-//   final XFile image;
-//
-//   const UploadPicEvent(this.saleId,this.circularColorValue,this.uploadPercent,this.image);
-//
-//   @override
-//   List<Object> get props => [saleId,circularColorValue,uploadPercent,image];
-// }
-
-// class GetPicUrlEvent extends AddCarForSaleEvent {
-//   final CarForSale carForSale;
-//   final double circularColorValue;
-//   final int uploadPercent;
-//   final Reference reference;
-//
-//   const GetPicUrlEvent(this.carForSale,this.circularColorValue,this.uploadPercent,this.reference);
-//
-//   @override
-//   List<Object> get props => [carForSale,circularColorValue,uploadPercent,reference];
-// }
