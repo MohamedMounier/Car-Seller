@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "991460113601",
+    "project_id": "voomeg-eca51",
+    "storage_bucket": "voomeg-eca51.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991460113601:android:22763ad94a1aaf5e952840",
+        "android_client_info": {
+          "package_name": "com.example.voomeg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991460113601-dsb4bvpmqhnbgfcm6ev5inn6nb8946se.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJiH2O08yzQkfylophBCSPFv1Oh9ADhn4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991460113601-dsb4bvpmqhnbgfcm6ev5inn6nb8946se.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
