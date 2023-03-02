@@ -37,6 +37,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
           carKilos: "51550",
           carLocation: "Cairo",
           saleStatus: "Available",
+          reservePrice: 350000,
           createdAt: Timestamp.now(),
           soldAt: Timestamp.now(),
           photosUrls:state.photosUrls!)));

@@ -13,6 +13,7 @@ class CarForSale extends Equatable {
       required this.carLocation,
       required this.saleStatus,
       required this.createdAt,
+      required this.reservePrice,
       required this.soldAt,
       required this.photosUrls});
 
@@ -22,6 +23,7 @@ class CarForSale extends Equatable {
   final String carKilos;
   final String carLocation;
   final String saleStatus;
+  final num reservePrice;
   final Timestamp createdAt;
   final Timestamp soldAt;
   final List<dynamic> photosUrls;
@@ -35,6 +37,7 @@ class CarForSale extends Equatable {
         carKilos,
         carLocation,
         saleStatus,
+    reservePrice,
         photosUrls,
       ];
 }

@@ -1,11 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:voomeg/core/global/resources/values_manager.dart';
+import 'package:voomeg/features/bids/domain/entities/for_sale_cars.dart';
 
 class HomeComponents extends StatelessWidget {
-  const HomeComponents({Key? key, required this.userUid}) : super(key: key);
+  const HomeComponents({Key? key, required this.userUid,required this.car,required this.imageUrl}) : super(key: key);
   final String userUid;
+  final CarForSale car;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -15,18 +19,31 @@ class HomeComponents extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            CachedNetworkImage(
+              imageUrl: imageUrl,
+              fadeInDuration: Duration(milliseconds: 700),
+              fadeInCurve: Curves.bounceInOut,
+
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Current offers',style: Theme.of(context).textTheme.headlineLarge,),
+                Text('Current Auctions',style: Theme.of(context).textTheme.headlineLarge,),
                 Text('0',style: Theme.of(context).textTheme.headlineLarge),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('$userUid',style: Theme.of(context).textTheme.headlineLarge,),
-                Text('0',style: Theme.of(context).textTheme.headlineLarge),
+                Text('Reserve Price ',style: Theme.of(context).textTheme.headlineLarge,),
+                Text('${car.reservePrice} EGP',style: Theme.of(context).textTheme.headlineLarge),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('UserId  ',style: Theme.of(context).textTheme.headlineLarge,),
+                Text('${userUid} EGP',style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
 

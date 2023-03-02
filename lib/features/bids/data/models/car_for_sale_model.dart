@@ -11,6 +11,7 @@ class CarForSaleModel extends CarForSale {
       required super.saleStatus,
       required super.createdAt,
       required super.soldAt,
+      required super.reservePrice,
       required super.photosUrls});
 
   factory CarForSaleModel.fromFireBase(Map<String, dynamic> data) =>
@@ -24,6 +25,7 @@ class CarForSaleModel extends CarForSale {
         userId: data['userId'],
         soldAt: data['soldAt'],
         createdAt: data['createdAt'],
+        reservePrice: data['reservePrice'],
         photosUrls: data['photosUrls'],
       );
 
@@ -38,5 +40,6 @@ class CarForSaleModel extends CarForSale {
     'soldAt':this.soldAt,
     'createdAt':this.createdAt,
     'photosUrls':this.photosUrls,
+    'reservePrice':this.reservePrice,
   };
 }

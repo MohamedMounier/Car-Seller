@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<LoginBloc>(
             create: (_)=>LoginBloc(sl(),sl(),sl())),
         BlocProvider<HomeBloc>(
-            create: (_)=>HomeBloc(sl())),
+            create: (_)=>HomeBloc(sl(),sl(),sl(),sl(),sl())),
         BlocProvider<AddCarForSaleBloc>(
             create: (_)=>AddCarForSaleBloc(sl(),sl(),sl())),
       ],
@@ -32,8 +32,17 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: getAppTheme(),
         onGenerateRoute: AppRouter.onGenerateRoutes,
-        initialRoute:sl<AppPreferences>().isLoginSaved()?AppRoutesName.home:AppRoutesName.login,
+        initialRoute:fetchInitialRoute(),
       ),
     );
+  }
+  String fetchInitialRoute(){
+    if(sl<AppPreferences>().isLoginSaved()&&sl<AppPreferences>().isTypeTrader()){
+      return AppRoutesName.traderHome;
+    }else if (sl<AppPreferences>().isLoginSaved()&&! sl<AppPreferences>().isTypeTrader()){
+      return AppRoutesName.home;
+    }else{
+      return AppRoutesName.login;
+    }
   }
 }

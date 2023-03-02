@@ -12,6 +12,19 @@ enum RegisterSteps{
   isAddedUser,
   isNotAddedUser
 }
+enum LoginSteps{
+  isNone,
+  isLoginUserIn,
+  isLoginUserInError,
+  isLoginUserInSuccess,
+  isSavingUserUid,
+  isSavingUserUidError,
+  isSavingUserUidSuccess,
+  isSavingUserType,
+  isSavingUserTypeError,
+  isSavingUserTypeSuccess,
+
+}
 
 enum AddCarRequestSteps{
   isNone,
@@ -34,4 +47,32 @@ enum TextValidator{
   phone,
   name,
   other
+}
+
+enum HomeScreenDataSteps{
+  isNone,
+  isFetchingUserType,
+  isFetchingUserTypeSucc,
+  isFetchingUserTypeError,
+  isFetchingUserUid,
+  isFetchingUserUidSucc,
+  isFetchingUserUidError,
+  isFetchingCars,
+  isFetchingCarsSucc,
+  isFetchingCarsError,
+  isFetchingUserInfo,
+  isFetchingUserInfoError,
+  isFetchingUserInfoSucc,
+}
+enum LocalDataStats{
+  isNone,
+  isRemovingUid,
+  isRemovedUidSucc,
+  isRemovedUidError,
+  isResetingType,
+  isResetingTypeSucc,
+  isResetingTypeError,
+  isLoggingOut,
+  isLoggedOutSucc,
+  isLoggedOutError,
 }

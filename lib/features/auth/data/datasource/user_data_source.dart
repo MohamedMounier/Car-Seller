@@ -10,9 +10,9 @@ import 'package:voomeg/features/auth/data/models/user_model.dart';
 import 'package:voomeg/features/auth/domain/entities/user_entity.dart';
 
 abstract class BaseUserRemoteDataSorce {
-  Future<UserModel>getUser();
+  Future<UserModel>getUser({required String userId,required bool isTrader});
   Future<UserCredential>logUserIn({required LoginModel loginModel});
-  Future<void>logUserOut();
+  Future<void> logUserOut();
   Future<UserCredential>createUser({required String email,required String password});
   Future<void>addUser(UserModel userModel);
 }
@@ -23,13 +23,14 @@ class UserRemoteDataSource implements BaseUserRemoteDataSorce{
 
   @override
   Future<void> addUser(UserModel userModel) async{
-    await firestore.collection(UserFireStoreConsts.usersCollection).doc(userModel.id).set(userModel.toFireBase());
+    await firestore.collection(userModel.isTrader?UserFireStoreConsts.tradersCollection:UserFireStoreConsts.usersCollection).doc(userModel.id).set(userModel.toFireBase());
   }
 
   @override
-  Future<UserModel> getUser() {
-    // TODO: implement getUser
-    throw UnimplementedError();
+  Future<UserModel> getUser({required String userId,required bool isTrader}) async{
+   var result= await firestore.collection(isTrader?UserFireStoreConsts.tradersCollection:UserFireStoreConsts.usersCollection).doc(userId).get();
+
+   return await UserModel.fromFireBase(result.data());
   }
 
   @override
@@ -38,12 +39,12 @@ class UserRemoteDataSource implements BaseUserRemoteDataSorce{
 
   }
 
-  @override
-  Future<void> logUserOut()async {
-    await firebaseAuth.signOut();
 
-  }
+ @override
+ Future<void> logUserOut()async {
+   await firebaseAuth.signOut();
 
+ }
   @override
   Future<UserCredential> createUser( {required String email,required String password})async {
     return  await firebaseAuth.createUserWithEmailAndPassword(email:email, password: password);

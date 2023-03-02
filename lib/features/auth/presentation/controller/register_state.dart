@@ -6,13 +6,15 @@ class RegisterState extends Equatable {
   final RegisterSteps registerStep;
   final String loginErrorMessage;
   final bool isUserSaved;
-  final UserCredential? user;
+   bool isTrader;
+   UserCredential? user;
 
-  const RegisterState({
+   RegisterState({
     this.requestState = RequestState.isNone,
     this.registerStep = RegisterSteps.isNone,
     this.loginErrorMessage = '',
     this.isUserSaved=false,
+    this.isTrader=false,
     this.user
   });
 
@@ -21,16 +23,18 @@ class RegisterState extends Equatable {
     RegisterSteps? registerStep,
     String? registerErrorMessage,
     bool? isUserSaved,
+    bool? isTrader,
     UserCredential? user
   }) =>
       RegisterState(requestState: requestState ?? this.requestState,
           loginErrorMessage: registerErrorMessage ?? this.loginErrorMessage,
           isUserSaved: isUserSaved??this.isUserSaved,
           registerStep: registerStep??this.registerStep,
-          user: user??this.user
+          user: user??this.user,
+        isTrader: isTrader??this.isTrader,
       );
 
   @override
-  List<Object> get props => [requestState, loginErrorMessage,isUserSaved,registerStep];
+  List<Object> get props => [requestState, loginErrorMessage,isUserSaved,registerStep,isTrader];
 }
 

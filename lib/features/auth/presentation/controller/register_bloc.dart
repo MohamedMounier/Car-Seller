@@ -19,12 +19,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final AddUserUseCase addUserUseCase;
 
 
-  bool obsecure = true;
-  bool loading = false;
-
   RegisterBloc(this.registerUserUseCase,this.addUserUseCase) : super(RegisterState()) {
     on<RegisterUserEvent>(onRegisterUSer);
     on<AddUserEvent>(onAddUser);
+    on<ChangeUserTypeEvent>(onChangeUserType);
   }
 
 
@@ -45,5 +43,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
             (l) => emit(state.copyWith(
             registerErrorMessage: l.errorMessage,requestState: RequestState.isError,registerStep: RegisterSteps.isNotAddedUser)),
             (r) => emit(state.copyWith(requestState: RequestState.isSucc,registerStep: RegisterSteps.isAddedUser)));
+  }
+  FutureOr<void> onChangeUserType(ChangeUserTypeEvent event, Emitter<RegisterState> emit) {
+    emit(state.copyWith(isTrader: event.isTrader,requestState: RequestState.isNone));
   }
 }
