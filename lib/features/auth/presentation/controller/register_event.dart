@@ -31,3 +31,11 @@ class RegisterUserEvent extends RegisterEvent {
   @override
   List<Object> get props => [loginEntity];
 }
+class ChangeUserTypeEvent extends RegisterEvent {
+  final bool isTrader;
+
+  const ChangeUserTypeEvent(this.isTrader);
+
+  @override
+  List<Object> get props => [isTrader];
+}

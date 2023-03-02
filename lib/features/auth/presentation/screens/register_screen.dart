@@ -23,12 +23,8 @@ class RegisterScreen extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         body: SafeArea(
-      child: BlocConsumer<RegisterBloc, RegisterState>(
-          listenWhen: (previous, current) {
-        print(
-            'printing previous  ${previous.requestState} and curreent is ${current.requestState}');
-        return previous.requestState != current.requestState;
-      }, listener: (context, state) {
+      child: BlocListener<RegisterBloc, RegisterState>(
+           listener: (context, state) {
         print('State is ${state.requestState}');
         if (state.requestState == RequestState.isSucc &&
             state.registerStep == RegisterSteps.isRegistered) {
@@ -45,6 +41,7 @@ class RegisterScreen extends StatelessWidget {
               password: passwordCtrl.text,
               id: state.user!.user!.uid,
               name: nameCtrl.text,
+              isTrader: state.isTrader,
               phone: phoneCtrl.text)));
         } else if (state.requestState == RequestState.isLoading) {
           showDialog(
@@ -72,117 +69,151 @@ class RegisterScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('${state.loginErrorMessage}')));
         }
-      }, builder: (context, states) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-          child: Card(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-              child: Form(
-                key: formKeyRegister,
-                child: ListView(
-                  children: [
-                    SizedBox(
-                      height: screenHeight * 0.1,
-                    ),
-                    Text(
-                      'Register',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                          color: ColorManager.primary),
-                    ),
-                    SizedBox(
-                      height: screenHeight * 0.1,
-                    ),
-                    EditableInfoField(
-                      hint: 'Email',
-                      iconName: Icons.email_outlined,
-                      textEditingController: emailCtrl,
-                      // containerWidth: screenWidth*.8,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    SizedBox(
-                      height: screenHeight * .05,
-                    ),
-                    EditableInfoField(
-                      hint: 'Password',
-                      iconName: Icons.lock_outline,
-                      textEditingController: passwordCtrl,
-                      // containerWidth: screenWidth*.8,
-                      keyboardType: TextInputType.visiblePassword,
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    EditableInfoField(
-                      hint: 'Name',
-                      iconName: Icons.person_outline,
-                      textEditingController: nameCtrl,
-                      // containerWidth: screenWidth*.8,
-                      keyboardType: TextInputType.text,
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    EditableInfoField(
-                      hint: 'Phone',
-                      iconName: Icons.phone_outlined,
-                      textEditingController: phoneCtrl,
-                      // containerWidth: screenWidth*.8,
-                      keyboardType: TextInputType.phone,
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: TextButton(
-                          onPressed: () {
-                            // Get.toNamed(Routes.forgotPassRoute);
-                          },
-                          child: Text(
-                            'Forgot Password ?',
-                            style: TextStyle(
-                                color: ColorManager.primary,
-                                fontSize: 16,
-                                decoration: TextDecoration.underline),
-                          )),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    states.requestState != RequestState.isLoading
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 15),
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                validator(context);
-                              },
-                              icon: Icon(Icons.login),
-                              label: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text('Register'),
-                              ),
-                            ),
-                          )
-                        : Center(
-                            child: CircularProgressIndicator(
-                              color: ColorManager.primary,
-                            ),
-                          ),
-                    SizedBox(
-                      height: screenHeight * .05,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      }),
+      },
+         child: Padding(
+           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+           child: Card(
+             child: Padding(
+               padding:
+               const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+               child: Form(
+                 key: formKeyRegister,
+                 child: ListView(
+                   children: [
+                     SizedBox(
+                       height: screenHeight * 0.1,
+                     ),
+                     Text(
+                       'Register',
+                       style: TextStyle(
+                           fontWeight: FontWeight.bold,
+                           fontSize: 30,
+                           color: ColorManager.primary),
+                     ),
+                     SizedBox(
+                       height: screenHeight * 0.1,
+                     ),
+                     EditableInfoField(
+                       hint: 'Email',
+                       iconName: Icons.email_outlined,
+                       textEditingController: emailCtrl,
+                       // containerWidth: screenWidth*.8,
+                       keyboardType: TextInputType.emailAddress,
+                       isPassword: false,
+
+                     ),
+                     SizedBox(
+                       height: screenHeight * .05,
+                     ),
+                     EditableInfoField(
+                       hint: 'Password',
+                       iconName: Icons.lock_outline,
+                       textEditingController: passwordCtrl,
+                       // containerWidth: screenWidth*.8,
+                       keyboardType: TextInputType.visiblePassword,
+                       isPassword: true,
+                     ),
+                     SizedBox(
+                       height: 30,
+                     ),
+                     EditableInfoField(
+                       hint: 'Name',
+                       iconName: Icons.person_outline,
+                       textEditingController: nameCtrl,
+                       // containerWidth: screenWidth*.8,
+                       keyboardType: TextInputType.text,
+                       isPassword: false,
+                     ),
+                     SizedBox(
+                       height: 30,
+                     ),
+                     EditableInfoField(
+                       hint: 'Phone',
+                       iconName: Icons.phone_outlined,
+                       textEditingController: phoneCtrl,
+                       // containerWidth: screenWidth*.8,
+                       keyboardType: TextInputType.phone,
+                       isPassword: false,
+                     ),
+                     SizedBox(
+                       height: 30,
+                     ),
+                     BlocBuilder<RegisterBloc, RegisterState>(
+                       builder: (context, state) {
+                         return CheckboxListTile(
+                           checkColor: Colors.white,
+                           activeColor: Colors.green,
+                           checkboxShape: RoundedRectangleBorder(),
+                           value: state.isTrader,
+                           onChanged: (val) {
+                             BlocProvider.of<RegisterBloc>(context).add(ChangeUserTypeEvent(val!));
+                           },
+                           title: Text(
+                             'Register as a trader  ',
+                             style: Theme
+                                 .of(context)
+                                 .textTheme
+                                 .titleMedium
+                                 ?.copyWith(color: ColorManager.primary),
+                           ),
+                         );
+                       },
+                     ),
+
+                     SizedBox(
+                       height: 30,
+                     ),
+                     Align(
+                       alignment: Alignment.bottomRight,
+                       child: TextButton(
+                           onPressed: () {
+                             // Get.toNamed(Routes.forgotPassRoute);
+                           },
+                           child: Text(
+                             'Forgot Password ?',
+                             style: TextStyle(
+                                 color: ColorManager.primary,
+                                 fontSize: 16,
+                                 decoration: TextDecoration.underline),
+                           )),
+                     ),
+                     SizedBox(
+                       height: 30,
+                     ),
+                     BlocBuilder<RegisterBloc,RegisterState>(builder: (context,state){
+                       if(state.requestState != RequestState.isLoading){
+                         return Padding(
+                           padding: const EdgeInsets.symmetric(
+                               horizontal: 20.0, vertical: 15),
+                           child: ElevatedButton.icon(
+                             onPressed: () {
+                               validator(context);
+                             },
+                             icon: Icon(Icons.login),
+                             label: Padding(
+                               padding: const EdgeInsets.all(8.0),
+                               child: Text('Register'),
+                             ),
+                           ),
+                         );
+                       }else{
+                        return Center(
+                           child: CircularProgressIndicator(
+                             color: ColorManager.primary,
+                           ),
+                         );
+                       }
+                     }),
+
+                     SizedBox(
+                       height: screenHeight * .05,
+                     ),
+                   ],
+                 ),
+               ),
+             ),
+           ),
+         ),),
     ));
   }
   validator(BuildContext context){

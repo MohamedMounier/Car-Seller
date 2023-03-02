@@ -10,6 +10,7 @@ abstract class BaseCarForSaleRepo {
   Future<Either<Failure,void>> addCar(CarForSale car);
   Future<Either<Failure,Reference>> savingImageToFireStorage({required XFile image,required String saleId});
   Future<Either<Failure,String>> getUploadedImageUrl({required Reference reference});
-  Future<Either<Failure,List<CarForSale>>>getUserCarsForSale();
+  Future<Either<Failure,List<CarForSale>>>getUserCarsForSale({required String userId});
+  Future<Either<Failure,List<CarForSale>>>getAvailableCarsForSale();
 
 }

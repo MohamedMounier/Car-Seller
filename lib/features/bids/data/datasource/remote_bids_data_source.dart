@@ -4,24 +4,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:voomeg/core/global/resources/strings_manager.dart';
 import 'package:voomeg/features/bids/data/datasource/fire_store_consts.dart';
 import 'package:voomeg/features/bids/data/models/car_for_sale_model.dart';
 
 abstract class BaseBidsRemoteDataSource{
-  Future<List<CarForSaleModel>>getUserCarsForSale();
+  Future<List<CarForSaleModel>>getUserCarsForSale({required String userId});
   Future<void> addCar(CarForSaleModel car);
   //Future<void> addCarImagesToStorage({required List<File> images,required String saleId});
   Future<void> addCarImagesToStorage({required List<XFile>chosenImages,required String saleId ,required List<dynamic>urls});
   Future<Reference> savingImageToFireStorage({required XFile image,required String saleId});
   Future<String> getUploadedImageUrl({required Reference reference});
+  Future<List<CarForSaleModel>>getAvailableCarsForSale();
+
+
 
 }
 class BidsRemoteDataSource implements BaseBidsRemoteDataSource{
  final FirebaseFirestore fireStore =FirebaseFirestore.instance;
  final FirebaseStorage firebaseStorage =FirebaseStorage.instance;
  final FirebaseAuth currentUser=FirebaseAuth.instance;
- late final CollectionReference imgRef;
-  @override
+
+ @override
   Future<void> addCar(CarForSaleModel car)async {
    // final ref= FirebaseStorage.instance.ref().child('userImage').child(_uid!+'.jpg');
    // await ref.putFile(imageFile!);
@@ -29,17 +33,18 @@ class BidsRemoteDataSource implements BaseBidsRemoteDataSource{
   }
 
   @override
-  Future<List<CarForSaleModel>> getUserCarsForSale()async {
+  Future<List<CarForSaleModel>> getUserCarsForSale({required String userId})async {
 
-    var result2= await fireStore.collection(BidsFireStoreConsts.forSale).get();
-    var result= result2.docs.where((element) {
-      return element.get("userId")==currentUser.currentUser!.uid;
-    }).toList().map((e) => CarForSaleModel.fromFireBase(e.data())).toList();
-    ///Getting all users sales below
-    //
-    // var ressss2= result2.docs.toList().map((e) => CarForSaleModel.fromFireBase(e.data())).toList();
-    // print(ressss2);
-    return await result;
+    final result = await
+        fireStore.collection(BidsFireStoreConsts.forSale)
+        .where(AppStrings.userId, isEqualTo: userId).get();
+
+
+    final carsList = result.docs.map((e) => CarForSaleModel.fromFireBase(e.data()))
+        .toList();
+
+    print(carsList);
+    return await carsList;
   }
 
   @override
@@ -70,6 +75,16 @@ class BidsRemoteDataSource implements BaseBidsRemoteDataSource{
   @override
   Future<String> getUploadedImageUrl({required Reference reference})async {
    return await reference.getDownloadURL();
+  }
+
+  @override
+  Future<List<CarForSaleModel>> getAvailableCarsForSale()async {
+   final result = await fireStore.collection(BidsFireStoreConsts.forSale).where(AppStrings.saleStatus,isEqualTo:AppStrings.available ).get();
+   final carsList = result.docs.map((document) => CarForSaleModel.fromFireBase(document.data()))
+       .toList();
+
+   print(carsList);
+   return await carsList;
   }
 
 }

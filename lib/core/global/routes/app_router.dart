@@ -5,6 +5,7 @@ import 'package:voomeg/features/auth/presentation/screens/login_screen.dart';
 import 'package:voomeg/features/auth/presentation/screens/register_screen.dart';
 import 'package:voomeg/features/bids/presentation/screens/add_car_screen.dart';
 import 'package:voomeg/features/bids/presentation/screens/home_screen.dart';
+import 'package:voomeg/features/bids/presentation/screens/trader_home_screen.dart';
 
 class AppRouter {
 static Route<dynamic> onGenerateRoutes (RouteSettings settings){
@@ -17,6 +18,8 @@ static Route<dynamic> onGenerateRoutes (RouteSettings settings){
       return MaterialPageRoute(builder: (_)=> HomeScreen());
     case AppRoutesName.addCar:
       return MaterialPageRoute(builder: (_)=> AddCarScreen());
+    case AppRoutesName.traderHome:
+      return MaterialPageRoute(builder: (_)=> const TraderHomeScreen());
     default :
       return undefinedRoute();
 
@@ -25,9 +28,9 @@ static Route<dynamic> onGenerateRoutes (RouteSettings settings){
 static Route<dynamic>undefinedRoute(){
   return MaterialPageRoute(builder: (_)=>
       Scaffold(
-        appBar: AppBar(title: const Text(StringsManager.noRouteFound),),
+        appBar: AppBar(title: const Text(AppStrings.noRouteFound),),
         body: const Center(
-          child: Text(StringsManager.noRouteFound),
+          child: Text(AppStrings.noRouteFound),
         ),
       )
   );

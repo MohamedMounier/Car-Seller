@@ -1,21 +1,14 @@
-class StringsManager{
+class AppStrings{
   static const String noRouteFound='NoRouteFound';
   //on boarding titles
   static const String isLoginSaved='isLoginSaved';
+  static const String isTypeTrader='isTypeTrader';
   static const String userUid='userUid';
 
   static const String onBoardingTitle2='NoRouteFound 2';
   static const String onBoardingTitle3='NoRouteFound 3';
 
-  // onboarding subtitle 1
-  static const String onBoardingSubTitle1='shop like a pro !';
-  static const String onBoardingSubTitle2='NoRouteFound sub 2';
-  static const String onBoardingSubTitle3='NoRouteFound sub 3 ';
-  static const String onBoardingSubTitle4='NoRouteFound sub 4';
-  // onBoarding skip button
-  static const String skip='Skip';
-  static const String forgetPassword='Forgot password ';
-  static const String notAmemberSignup='not a member ? sign up ';
+
   // login strings
   static const String userName='Username';
   static const String password='Password';
@@ -28,6 +21,15 @@ class StringsManager{
   static const String loading='loading...';
   static const String retryAgain='Retry again';
   static const String ok='ok';
+  // carForSale keys
+  static const String userId='userId';
+  static const String saleStatus='saleStatus';
+
+  //carForSale consts values
+  static const String available='Available';
+  static const String sold='Sold';
+
+
 
 
 }

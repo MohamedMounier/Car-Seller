@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:voomeg/core/error/failure.dart';
@@ -25,6 +26,7 @@ class CarForSaleRepo implements BaseCarForSaleRepo {
           saleStatus:car.saleStatus,
           createdAt: car.createdAt,
           soldAt: car.soldAt,
+          reservePrice: car.reservePrice,
           photosUrls:car. photosUrls));
       return Right(result);
     } on FirebaseException catch (error) {
@@ -47,9 +49,9 @@ class CarForSaleRepo implements BaseCarForSaleRepo {
   }
 
   @override
-  Future<Either<Failure, List<CarForSaleModel>>> getUserCarsForSale() async {
+  Future<Either<Failure, List<CarForSale>>> getUserCarsForSale({required String userId}) async {
     try {
-      var result = await baseBidsRemoteDataSource.getUserCarsForSale();
+      var result = await baseBidsRemoteDataSource.getUserCarsForSale(userId: userId);
       return Right(result);
     } on FirebaseException catch (error) {
       return Left(ServerFailure(error.message ?? "error"));
@@ -65,6 +67,22 @@ class CarForSaleRepo implements BaseCarForSaleRepo {
       return Right(result);
     } on FirebaseException catch (error) {
       return Left(ServerFailure(error.message ?? "error"));
+    }catch (error){
+      return Left(ServerFailure(error.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, List<CarForSale>>> getAvailableCarsForSale()async {
+    try {
+      var result = await baseBidsRemoteDataSource.getAvailableCarsForSale();
+      return Right(result);
+    } on FirebaseException catch (error) {
+      return Left(ServerFailure(error.message ?? "error"));
+    }catch (error){
+      return Left(ServerFailure(error.toString()));
+    }
+  }
+
+
 }

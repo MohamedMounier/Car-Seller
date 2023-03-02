@@ -26,6 +26,7 @@ class UserRepo implements BaseUserRepo {
           name: user.name,
           password: user.password,
           email: user.email,
+          isTrader: user.isTrader,
           phone: user.phone));
       return Right(result);
     }  on FirebaseException catch ( error){
@@ -50,9 +51,17 @@ class UserRepo implements BaseUserRepo {
   }
 
   @override
-  Future<Either<Failure, UserEntity>> getUser() {
-    // TODO: implement getUser
-    throw UnimplementedError();
+  Future<Either<Failure, UserEntity>> getUser({required String userId,required bool isTrader})async {
+    try {
+      var result = await baseUserRemoteDataSorce.getUser(userId: userId, isTrader: isTrader);
+
+      return  Right( result);
+    } on FirebaseException catch (authError) {
+      print('Error heeere repo');
+      return Left(ServerFailure(authError.message??'error')  );
+    }catch(error){
+      return Left(ServerFailure(error.toString()));
+    }
   }
 
   @override

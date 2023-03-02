@@ -26,18 +26,38 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<SaveUserUidEvent>(onSaveUserUid);
     on<RememberMeEvent>(onChangeRememberMe);
     on<ShowPasswordEvent>(onShowPassword);
+    on<ChangeUserTypeEvent>(onChangeUserType);
+    on<SaveUserTypeEvent>(onSaveUSerType);
+
   }
 
+
+
   FutureOr<void> onLogin(LoginEventLogUserIn event, Emitter<LoginState> emit)async {
-    emit(state.copyWith(requestState: RequestState.isLoading));
+
+    emit(state.copyWith(requestState: RequestState.isLoading,loginSteps: LoginSteps.isLoginUserIn));
     final result = await logUserInUseCase(event.loginEntity);
     result.fold(
             (l) => emit(state.copyWith(
-            loginErrorMessage: l.errorMessage,requestState: RequestState.isError)),
-            (r) => emit(state.copyWith(user: r,requestState: RequestState.isSucc)));
+            loginErrorMessage: l.errorMessage,requestState: RequestState.isError,loginSteps: LoginSteps.isLoginUserInError)),
+
+            (r) {
+              print('User from login is $r');
+              print('User in state before emit is ${state.user}');
+              print('User uid saved in state  before emit is ${state.userUid}');
+              emit(state.copyWith(user: r,requestState: RequestState.isSucc,userUid: r.user!.uid,loginSteps: LoginSteps.isLoginUserInSuccess));
+              print('User in state after emit is ${state.user}');
+              print('User uid saved in state  after emit is ${state.userUid}');
+
+            });
+
+
   }
 
+
+
   FutureOr<void> onSaveLogin(LoginSaveUserCheck event, Emitter<LoginState> emit)async {
+    emit(state.copyWith(loginSteps: LoginSteps.isNone));
     var result = await appPrefrences.saveLogin(event.checkSearch!);
     result.fold((l) {
       emit(state.copyWith(requestState:RequestState.isError,loginErrorMessage: l.errorMessage));
@@ -47,11 +67,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
   }
   FutureOr<void> onSaveUserUid(SaveUserUidEvent event, Emitter<LoginState> emit)async {
+    emit(state.copyWith(requestState: RequestState.isLoading,loginSteps: LoginSteps.isSavingUserUid));
     var result = await appPrefrences.saveUserUid(event.userUid!);
     result.fold((l) {
-      emit(state.copyWith(requestState: RequestState.isError,loginErrorMessage: l.errorMessage));
+      emit(state.copyWith(requestState: RequestState.isError,loginSteps: LoginSteps.isSavingUserUidError,loginErrorMessage: l.errorMessage));
     }, (r) {
-      emit(state.copyWith(userUid: event.userUid));
+      if(r){
+        emit(state.copyWith(userUid: event.userUid,loginSteps: LoginSteps.isSavingUserUidSuccess,requestState: RequestState.isSucc));
+
+      }else{
+        emit(state.copyWith(userUid: event.userUid,loginSteps: LoginSteps.isSavingUserUidError));
+
+      }
 
     });
   }
@@ -62,7 +89,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   FutureOr<void> onChangeRememberMe(RememberMeEvent event, Emitter<LoginState> emit) {
-    emit(state.copyWith(isUserSaved: event.isRememberUser,requestState: RequestState.isNone));
+    emit(state.copyWith(isUserSaved: event.isRememberUser,requestState: RequestState.isNone,loginSteps: LoginSteps.isNone,));
+  }
+  FutureOr<void> onChangeUserType(ChangeUserTypeEvent event, Emitter<LoginState> emit)async {
+
+    emit(state.copyWith(isTrader: event.isTrader,requestState: RequestState.isNone));
+
+  }
+  FutureOr<void> onSaveUSerType(SaveUserTypeEvent event, Emitter<LoginState> emit)async {
+    var result = await appPrefrences.saveUserType(event.isTrader);
+    result.fold((l) {
+      emit(state.copyWith(requestState:RequestState.isError,loginErrorMessage: l.errorMessage));
+    }, (r) {
+      emit(state.copyWith(isTrader: event.isTrader,requestState: RequestState.isNone,loginSteps: LoginSteps.isNone));
+    });
+    print('Saved User Type is Trader?${appPrefrences.isTypeTrader()}');
+    print('Saved User Type is Trader?${state.isTrader}');
   }
 }
 
