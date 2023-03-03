@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:voomeg/core/enums/enums.dart';
 import 'package:voomeg/core/utils/services/app_prefrences.dart';
 import 'package:voomeg/features/auth/domain/entities/login.dart';
@@ -99,8 +98,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }, (r) {
       emit(state.copyWith(isTrader: event.isTrader,requestState: RequestState.isNone,loginSteps: LoginSteps.isNone));
     });
-    print('Saved User Type is Trader?${appPrefrences.isTypeTrader()}');
-    print('Saved User Type is Trader?${state.isTrader}');
+
   }
 }
 

@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    print('The Staaaaaaaaaart');
     return MultiBlocProvider(
       providers: [
         BlocProvider<RegisterBloc>(
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: getAppTheme(),
+
         onGenerateRoute: AppRouter.onGenerateRoutes,
         initialRoute:fetchInitialRoute(),
       ),

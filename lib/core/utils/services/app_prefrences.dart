@@ -15,8 +15,8 @@ class AppPreferences {
   }
   bool isTypeTrader() {
     bool? isTrader =
-        _sharedPreferences.getBool(AppStrings.isTypeTrader) ;
-    return isTrader!;
+        _sharedPreferences.getBool(AppStrings.isTypeTrader) ??false;
+    return isTrader;
   }
 
   String fetchSavedUserUid() {

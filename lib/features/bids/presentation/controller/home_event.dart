@@ -68,4 +68,11 @@ class ResetUserUidEvent extends HomeEvent {
   // TODO: implement props
   List<Object?> get props => [];
 }
+class ResetHomeDataEvent extends HomeEvent {
+  const ResetHomeDataEvent();
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
 

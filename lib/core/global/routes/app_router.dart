@@ -25,7 +25,7 @@ static Route<dynamic> onGenerateRoutes (RouteSettings settings){
     case AppRoutesName.addOffer:
       return MaterialPageRoute(builder: (_)=>  AddOfferScreen());
     case AppRoutesName.userOffers:
-      return MaterialPageRoute(builder: (_)=>  UserOffersScreen());
+      return MaterialPageRoute(builder: (_)=>  const UserOffersScreen());
     default :
       return undefinedRoute();
 
