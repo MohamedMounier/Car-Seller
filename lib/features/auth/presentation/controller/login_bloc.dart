@@ -42,12 +42,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             loginErrorMessage: l.errorMessage,requestState: RequestState.isError,loginSteps: LoginSteps.isLoginUserInError)),
 
             (r) {
-              print('User from login is $r');
-              print('User in state before emit is ${state.user}');
-              print('User uid saved in state  before emit is ${state.userUid}');
+
               emit(state.copyWith(user: r,requestState: RequestState.isSucc,userUid: r.user!.uid,loginSteps: LoginSteps.isLoginUserInSuccess));
-              print('User in state after emit is ${state.user}');
-              print('User uid saved in state  after emit is ${state.userUid}');
 
             });
 

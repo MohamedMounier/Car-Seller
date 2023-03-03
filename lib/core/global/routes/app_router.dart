@@ -5,6 +5,8 @@ import 'package:voomeg/features/auth/presentation/screens/login_screen.dart';
 import 'package:voomeg/features/auth/presentation/screens/register_screen.dart';
 import 'package:voomeg/features/bids/presentation/screens/add_car_screen.dart';
 import 'package:voomeg/features/bids/presentation/screens/home_screen.dart';
+import 'package:voomeg/features/bids/presentation/screens/offers_screens/add_offer_screen.dart';
+import 'package:voomeg/features/bids/presentation/screens/offers_screens/user_offers_screen.dart';
 import 'package:voomeg/features/bids/presentation/screens/trader_home_screen.dart';
 
 class AppRouter {
@@ -20,6 +22,10 @@ static Route<dynamic> onGenerateRoutes (RouteSettings settings){
       return MaterialPageRoute(builder: (_)=> AddCarScreen());
     case AppRoutesName.traderHome:
       return MaterialPageRoute(builder: (_)=> const TraderHomeScreen());
+    case AppRoutesName.addOffer:
+      return MaterialPageRoute(builder: (_)=>  AddOfferScreen());
+    case AppRoutesName.userOffers:
+      return MaterialPageRoute(builder: (_)=>  UserOffersScreen());
     default :
       return undefinedRoute();
 

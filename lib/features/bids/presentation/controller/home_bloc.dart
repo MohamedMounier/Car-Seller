@@ -133,8 +133,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       isTrader: appPrefrences.isTypeTrader(),
       userUid: appPrefrences.fetchSavedUserUid()
     ));
-    print('user uid is ${state.userUid} ');
-    print('user type trader?  is ${state.isTrader} ');
+
     final result = await getUserUseCase(GetUserUseCaseParameters(
       userId: state.userUid,
       isTrader: state.isTrader,
@@ -144,11 +143,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             requestState: RequestState.isError, errorMessage: l.errorMessage,
           step: HomeScreenDataSteps.isFetchingUserInfoError
         )),
-        (r) => emit(
-            state.copyWith(currentUser: r, requestState: RequestState.isSucc,
-                step: HomeScreenDataSteps.isFetchingUserInfoSucc
+        (r) {
+          print('user uid is ${state.userUid} ');
+          print('user type trader?  is ${state.isTrader} ');
+          emit(
+              state.copyWith(currentUser: r, requestState: RequestState.isSucc,
+                  step: HomeScreenDataSteps.isFetchingUserInfoSucc
 
-            )));
+              ));
+        });
+
   }
 
   FutureOr<void> onLogOutUser(LogOutEvent event, Emitter<HomeState> emit)async {
