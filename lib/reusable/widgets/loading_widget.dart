@@ -7,7 +7,7 @@ class LoadingJsonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  SizedBox(child: Lottie.asset(JsonAssets.LoadingJson,
+    return  SizedBox(child: Lottie.asset(JsonAssets.loadingJson,
 
       height: 100,
       width:100,

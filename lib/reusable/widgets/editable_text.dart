@@ -63,7 +63,7 @@ class _EditableInfoFieldState extends State<EditableInfoField> {
           hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
             fontWeight: FontWeight.w300,
             fontSize: 13,
-            color: ColorManager.grey,
+            color: ColorManager.lightGrey,
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey),

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:voomeg/core/enums/enums.dart';
-import 'package:voomeg/core/global/resources/assets_manager.dart';
 import 'package:voomeg/core/global/resources/color_manager.dart';
-import 'package:voomeg/core/global/resources/size_config.dart';
 import 'package:voomeg/core/global/routes/app_routes_names.dart';
+import 'package:voomeg/features/auth/presentation/controller/login_bloc.dart';
 import 'package:voomeg/features/bids/presentation/components/home_components.dart';
 import 'package:voomeg/features/bids/presentation/components/profile_components.dart';
 import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
@@ -20,6 +18,7 @@ class TraderHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     BlocProvider.of<HomeBloc>(context).add(FetchUserEvent());
     BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
+
     return BlocListener<HomeBloc, HomeState>(
       listenWhen: (previous,current){
        return current.localDataStats!=previous.localDataStats;
@@ -31,9 +30,13 @@ class TraderHomeScreen extends StatelessWidget {
 
         else if(state.localDataStats==LocalDataStats.isResetingTypeSucc&&state.requestState==RequestState.isSucc) {
           BlocProvider.of<HomeBloc>(context).add(ResetUserUidEvent());
-        }else if(state.localDataStats==LocalDataStats.isRemovedUidSucc&&state.requestState==RequestState.isSucc) {
-          Navigator.pushReplacementNamed(context, AppRoutesName.login);
+        }else if (state.localDataStats == LocalDataStats.isRemovedUidSucc &&
+            state.requestState == RequestState.isSucc&&state.currentNavBarIndex==1) {
+          BlocProvider.of<HomeBloc>(context).add(ResetHomeDataEvent());
+          BlocProvider.of<LoginBloc>(context).add(ChangeUserTypeEvent(false));
+          //  Navigator.pushReplacementNamed(context, AppRoutesName.login);
 
+          Future.delayed(Duration(milliseconds: 100),()=> Navigator.pushReplacementNamed(context, AppRoutesName.login));
         }
       },
       child: WillPopScope(
@@ -50,7 +53,7 @@ class TraderHomeScreen extends StatelessWidget {
             BlocBuilder<HomeBloc,HomeState>(builder: (context,state){
 
                 if(state.requestState==RequestState.isLoading){
-                  return Center(child: LoadingJsonWidget(),);
+                  return const Center(child: LoadingJsonWidget(),);
                 }else if (state.requestState==RequestState.isError){
                   return Center(child:  ErrorJsonWidget(errorMessage: state.errorMessage));
                 }else{
@@ -92,12 +95,12 @@ class TraderHomeScreen extends StatelessWidget {
                   BlocProvider.of<HomeBloc>(context).add(FetchUserEvent());
                 }
               },
-              selectedItemColor: ColorManager.ourPrimary,
+              selectedItemColor: Theme.of(context).primaryColor,
               unselectedItemColor: ColorManager.lightGrey,
               items: [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+                BottomNavigationBarItem(icon: const Icon(Icons.home), label: 'Home'),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.person), label: 'Profile'),
+                    icon: const Icon(Icons.person), label: 'Profile'),
               ],
             );
   }

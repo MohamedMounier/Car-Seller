@@ -5,7 +5,6 @@ class ColorManager{
   static Color ourPrimary=const Color(0xffFF1694);
   // the color was '#ED9728'
   static Color darkGrey=const Color(0xff525252);
-  static Color grey=const Color(0xffE737477);
   static Color lightGrey=const Color(0xff9E9E9E);
   static Color black=const Color(0xff000000);
 // Hexademical color code for transparency like CC instead of ff

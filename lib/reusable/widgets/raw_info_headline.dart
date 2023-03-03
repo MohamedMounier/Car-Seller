@@ -13,7 +13,7 @@ class InfoRowHeadline extends StatelessWidget {
           title ,
           style: Theme.of(context).textTheme.headlineLarge,
         ),
-        Text(info, style: Theme.of(context).textTheme.headlineLarge),
+        Flexible(child: Text(info, style: Theme.of(context).textTheme.headlineLarge)),
       ],
     );
   }

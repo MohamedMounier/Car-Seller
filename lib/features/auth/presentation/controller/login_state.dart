@@ -17,7 +17,7 @@ class LoginState extends Equatable {
     this.loginErrorMessage = '',
     this.userUid = '',
     this.isUserSaved=false,
-    this.isPasswordVisible=false,
+    this.isPasswordVisible=true,
     this.isTrader=false,
     this.user
   });

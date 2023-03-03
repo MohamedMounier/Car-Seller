@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voomeg/core/enums/enums.dart';
 import 'package:voomeg/core/global/resources/color_manager.dart';
-import 'package:voomeg/core/global/routes/app_router.dart';
+import 'package:voomeg/core/global/resources/values_manager.dart';
 import 'package:voomeg/core/global/routes/app_routes_names.dart';
 import 'package:voomeg/features/auth/domain/entities/login.dart';
 import 'package:voomeg/features/auth/domain/entities/user_entity.dart';
 import 'package:voomeg/features/auth/presentation/controller/register_bloc.dart';
+import 'package:voomeg/reusable/toasts/app_toastss.dart';
 import 'package:voomeg/reusable/widgets/editable_text.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -20,22 +21,13 @@ class RegisterScreen extends StatelessWidget {
 
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         body: SafeArea(
       child: BlocListener<RegisterBloc, RegisterState>(
            listener: (context, state) {
-        print('State is ${state.requestState}');
         if (state.requestState == RequestState.isSucc &&
             state.registerStep == RegisterSteps.isRegistered) {
-          Navigator.pop(context);
-          showDialog(
-              context: context,
-              builder: (builder) {
-                return AlertDialog(
-                  content: Text('Registering ....'),
-                );
-              });
+
           BlocProvider.of<RegisterBloc>(context).add(AddUserEvent(UserEntity(
               email: emailCtrl.text,
               password: passwordCtrl.text,
@@ -44,30 +36,17 @@ class RegisterScreen extends StatelessWidget {
               isTrader: state.isTrader,
               phone: phoneCtrl.text)));
         } else if (state.requestState == RequestState.isLoading) {
-          showDialog(
-              context: context,
-              builder: (builder) {
-                return AlertDialog(
-                  content: Text('Loading ....'),
-                );
-              });
+          ScaffoldMessenger.of(context).showSnackBar(snackBarToast(text: 'Loading', isError: false));
+
         } else if (state.requestState == RequestState.isSucc &&
             state.registerStep == RegisterSteps.isAddedUser) {
           // Navigator.pop(context);
-          showDialog(
-              context: context,
-              builder: (builder) {
-                return AlertDialog(
-                  content: Text('Registered Successfully ....'),
-                );
-              });
-          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(snackBarToast(text: 'Registered Successfully ...', isError: false));
           Navigator.pushReplacementNamed(context, AppRoutesName.login);
         } else if (state.requestState == RequestState.isError) {
-          Navigator.pop(context);
 
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('${state.loginErrorMessage}')));
+          ScaffoldMessenger.of(context).showSnackBar(snackBarToast(text: state.loginErrorMessage, isError: true));
+
         }
       },
          child: Padding(
@@ -113,8 +92,8 @@ class RegisterScreen extends StatelessWidget {
                        keyboardType: TextInputType.visiblePassword,
                        isPassword: true,
                      ),
-                     SizedBox(
-                       height: 30,
+                     const  SizedBox(
+                       height: AppSize.s30,
                      ),
                      EditableInfoField(
                        hint: 'Name',
@@ -124,7 +103,7 @@ class RegisterScreen extends StatelessWidget {
                        keyboardType: TextInputType.text,
                        isPassword: false,
                      ),
-                     SizedBox(
+                     const SizedBox(
                        height: 30,
                      ),
                      EditableInfoField(
@@ -135,7 +114,7 @@ class RegisterScreen extends StatelessWidget {
                        keyboardType: TextInputType.phone,
                        isPassword: false,
                      ),
-                     SizedBox(
+                     const SizedBox(
                        height: 30,
                      ),
                      BlocBuilder<RegisterBloc, RegisterState>(
@@ -143,7 +122,7 @@ class RegisterScreen extends StatelessWidget {
                          return CheckboxListTile(
                            checkColor: Colors.white,
                            activeColor: Colors.green,
-                           checkboxShape: RoundedRectangleBorder(),
+                           checkboxShape: const RoundedRectangleBorder(),
                            value: state.isTrader,
                            onChanged: (val) {
                              BlocProvider.of<RegisterBloc>(context).add(ChangeUserTypeEvent(val!));
@@ -160,7 +139,7 @@ class RegisterScreen extends StatelessWidget {
                        },
                      ),
 
-                     SizedBox(
+                     const SizedBox(
                        height: 30,
                      ),
                      Align(
@@ -177,7 +156,7 @@ class RegisterScreen extends StatelessWidget {
                                  decoration: TextDecoration.underline),
                            )),
                      ),
-                     SizedBox(
+                     const SizedBox(
                        height: 30,
                      ),
                      BlocBuilder<RegisterBloc,RegisterState>(builder: (context,state){
@@ -190,8 +169,8 @@ class RegisterScreen extends StatelessWidget {
                                validator(context);
                              },
                              icon: Icon(Icons.login),
-                             label: Padding(
-                               padding: const EdgeInsets.all(8.0),
+                             label: const Padding(
+                               padding:  EdgeInsets.all(AppPading.p8),
                                child: Text('Register'),
                              ),
                            ),

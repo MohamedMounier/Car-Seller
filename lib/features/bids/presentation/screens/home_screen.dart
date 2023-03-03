@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voomeg/core/enums/enums.dart';
 import 'package:voomeg/core/global/resources/color_manager.dart';
+import 'package:voomeg/core/global/resources/size_config.dart';
+import 'package:voomeg/core/global/resources/theme_manager.dart';
+import 'package:voomeg/core/global/resources/values_manager.dart';
 import 'package:voomeg/core/global/routes/app_routes_names.dart';
-
 import 'package:voomeg/features/bids/presentation/components/home_components.dart';
 import 'package:voomeg/features/bids/presentation/components/profile_components.dart';
 import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/offers_blocs/user_offers_bloc.dart';
 import 'package:voomeg/reusable/widgets/error_widget.dart';
 import 'package:voomeg/reusable/widgets/loading_widget.dart';
+
+import '../../../auth/presentation/controller/login_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -43,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
             state.requestState == RequestState.isSucc&&state.currentNavBarIndex==1) {
           BlocProvider.of<HomeBloc>(context).add(ResetHomeDataEvent());
         //  Navigator.pushReplacementNamed(context, AppRoutesName.login);
+          BlocProvider.of<LoginBloc>(context).add(ChangeUserTypeEvent(false));
 
           Future.delayed(Duration(milliseconds: 100),()=> Navigator.pushReplacementNamed(context, AppRoutesName.login));
         }
@@ -54,9 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
             BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
           },
           child: Scaffold(
-            appBar: AppBar(title: Text('Your Cars'),
-            leading: SizedBox(),
-            ),
+
             floatingActionButton: floatingActionButtonUser(context),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
@@ -71,7 +74,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               } else {
                 if (state.currentNavBarIndex == 0) {
-                  return userCarsList(state);
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: SizeConfig.screenHeight(context)*.08,),
+                      Padding(
+                        padding: const EdgeInsets.only(left: AppPading.p20),
+                        child: Text('Your Cars List : - ',
+                        style: Theme.of(context).textTheme.headlineLarge,
+                        ),
+                      ),
+                      //SizedBox(height: SizeConfig.screenHeight(context)*.005,),
+
+                      Expanded(child: userCarsList(state)),
+                    ],
+                  );
                 } else {
                   return Column(
                     children: [

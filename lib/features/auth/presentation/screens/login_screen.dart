@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voomeg/core/enums/enums.dart';
 import 'package:voomeg/core/global/resources/color_manager.dart';
+import 'package:voomeg/core/global/resources/values_manager.dart';
 import 'package:voomeg/core/global/routes/app_routes_names.dart';
 import 'package:voomeg/features/auth/domain/entities/login.dart';
 import 'package:voomeg/features/auth/presentation/controller/login_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
+import 'package:voomeg/reusable/toasts/app_toastss.dart';
 import 'package:voomeg/reusable/widgets/editable_text.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -40,20 +42,17 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor:Theme.of(context).primaryColor,
         body: SafeArea(
           child: BlocListener<LoginBloc, LoginState>(
             listener: (context, state) {
-              print('State is ${state.requestState}');
               if (state.loginSteps==LoginSteps.isSavingUserUidSuccess&&state.requestState==RequestState.isSucc) {
 
                 //Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Successfully Logged in ...')));
 
-                BlocProvider.of<HomeBloc>(context).add(FetchUserTypeEvent());
+
+                BlocProvider.of<HomeBloc>(context).add( FetchUserTypeEvent());
                 BlocProvider.of<HomeBloc>(context).add(FetchUserUidEvent());
                 BlocProvider.of<HomeBloc>(context).add(FetchUserEvent());
                 BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
@@ -74,9 +73,10 @@ class _LoginScreenState extends State<LoginScreen> {
               } else if (state.requestState == RequestState.isError) {
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('${state.loginErrorMessage}')));
+                    SnackBar(content: Text(state.loginErrorMessage)));
               }else if (state.loginSteps==LoginSteps.isLoginUserInSuccess){
-
+                ScaffoldMessenger.of(context).showSnackBar(
+                    snackBarToast(isError: false,text: 'Successfully Logged in ...'));
                 BlocProvider.of<LoginBloc>(context).add(LoginSaveUserCheck(state.isUserSaved));
                 BlocProvider.of<LoginBloc>(context).add(SaveUserUidEvent(state.userUid));
               }
@@ -132,8 +132,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         state.isPasswordVisible));
                                   },
                                   icon: state.isPasswordVisible
-                                      ? Icon(Icons.remove_red_eye_outlined)
-                                      : Icon(Icons.lock_clock_rounded)),
+                                      ?const  Icon(Icons.remove_red_eye_outlined)
+                                      : const Icon(Icons.lock_clock_rounded)),
                             );
                           },
                         ),
@@ -149,22 +149,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                     context, AppRoutesName.register);
                               },
                               child: Text(
-                                'Have an account ?',
+                                'Don\'t Have an account ?',
                                 style: TextStyle(
                                     color: ColorManager.primary,
                                     fontSize: 16,
                                     decoration: TextDecoration.underline),
                               )),
                         ),
-                        SizedBox(
-                          height: 30,
+                        const SizedBox(
+                          height: AppSize.s30,
                         ),
                         BlocBuilder<LoginBloc, LoginState>(
                           builder: (context, state) {
                             return CheckboxListTile(
                               checkColor: Colors.white,
-                              activeColor: Colors.green,
-                              checkboxShape: RoundedRectangleBorder(),
+                              activeColor:Theme.of(context).primaryColor,
+                              checkboxShape: const RoundedRectangleBorder(),
                               value: state.isUserSaved,
                               onChanged: (val) {
                                 BlocProvider.of<LoginBloc>(context).add(RememberMeEvent(val));
@@ -179,15 +179,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
                           },
                         ),
-                        SizedBox(
-                          height: 30,
+                        const SizedBox(
+                          height: AppSize.s30,
                         ),
                         BlocBuilder<LoginBloc, LoginState>(
                           builder: (context, state) {
                             return CheckboxListTile(
                               checkColor: Colors.white,
-                              activeColor: Colors.green,
-                              checkboxShape: RoundedRectangleBorder(),
+                              activeColor: Theme.of(context).primaryColor,
+                              checkboxShape: const RoundedRectangleBorder(),
                               value: state.isTrader,
                               onChanged: (val) {
                                 BlocProvider.of<LoginBloc>(context).add(ChangeUserTypeEvent(val!));
@@ -204,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
                         BlocBuilder<LoginBloc, LoginState>(
@@ -223,9 +223,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onPressed: () {
                                   validateFields(context);
                                 },
-                                icon: Icon(Icons.login),
-                                label: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                icon: const Icon(Icons.login),
+                                label: const Padding(
+                                  padding:  EdgeInsets.all(AppPading.p8),
                                   child: Text('Login'),
                                 ),
                               ),

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:voomeg/core/enums/enums.dart';
@@ -194,6 +193,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   FutureOr<void> onResetHomeData(ResetHomeDataEvent event, Emitter<HomeState> emit) {
     //state.currentNavBarIndex=0;
-    emit(state.copyWith(requestState: RequestState.isNone));
+    emit(state.copyWith(requestState: RequestState.isNone,isTrader: false));
   }
 }

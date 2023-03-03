@@ -18,13 +18,14 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    print('The Staaaaaaaaaart');
     return MultiBlocProvider(
       providers: [
         BlocProvider<RegisterBloc>(
         create: (_)=>RegisterBloc(sl(), sl())),
 
         BlocProvider<LoginBloc>(
-            create: (_)=>LoginBloc(sl(),sl(),sl())..add(SaveUserTypeEvent(false))),
+            create: (_)=>LoginBloc(sl(),sl(),sl())),
         BlocProvider<HomeBloc>(
             create: (_)=>HomeBloc(sl(),sl(),sl(),sl(),sl())),
         BlocProvider<AddCarForSaleBloc>(
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: getAppTheme(),
+
         onGenerateRoute: AppRouter.onGenerateRoutes,
         initialRoute:fetchInitialRoute(),
       ),

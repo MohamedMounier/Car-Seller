@@ -1,13 +1,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:voomeg/core/error/error_models/error_message_model.dart';
-import 'package:voomeg/core/error/exceptions.dart';
-import 'package:voomeg/core/error/failure.dart';
 import 'package:voomeg/features/auth/data/datasource/fire_store_consts.dart';
 import 'package:voomeg/features/auth/data/models/login_model.dart';
 import 'package:voomeg/features/auth/data/models/user_model.dart';
-import 'package:voomeg/features/auth/domain/entities/user_entity.dart';
 
 abstract class BaseUserRemoteDataSorce {
   Future<UserModel>getUser({required String userId,required bool isTrader});
@@ -30,7 +26,7 @@ class UserRemoteDataSource implements BaseUserRemoteDataSorce{
   Future<UserModel> getUser({required String userId,required bool isTrader}) async{
    var result= await firestore.collection(isTrader?UserFireStoreConsts.tradersCollection:UserFireStoreConsts.usersCollection).doc(userId).get();
 
-   return await UserModel.fromFireBase(result.data());
+   return  UserModel.fromFireBase(result.data());
   }
 
   @override

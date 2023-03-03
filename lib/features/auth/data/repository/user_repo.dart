@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_platform_interface/src/auth_credential.dart';
-import 'package:voomeg/core/error/error_models/error_message_model.dart';
-import 'package:voomeg/core/error/exceptions.dart';
+
 import 'package:voomeg/core/error/failure.dart';
 import 'package:voomeg/features/auth/data/datasource/user_data_source.dart';
 import 'package:voomeg/features/auth/data/models/login_model.dart';
