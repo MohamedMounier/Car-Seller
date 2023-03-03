@@ -70,7 +70,7 @@ class AddOfferScreen extends StatelessWidget {
 
                              PriceRowWidget(
                                title: 'Reserve Price',
-                               price:  state.carForSale!.reservePrice,
+                               price:  state.carForSale!.reservePrice.toString(),
                              ),
                              SizedBox(height: SizeConfig.screenHeight(context)*0.02,),
                              InfoRowHeadline(title: 'Seller Name', info:  state.saleUser!.name),

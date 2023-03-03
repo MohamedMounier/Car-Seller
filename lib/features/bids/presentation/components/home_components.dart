@@ -50,7 +50,7 @@ class HomeComponents extends StatelessWidget {
 
             PriceRowWidget(
               title: 'Reserve Price',
-              price: car.reservePrice,
+              price: car.reservePrice.toString(),
             ),
             SizedBox(height: SizeConfig.screenHeight(context)*0.02,),
            InfoRowHeadline(title: 'Car Name', info: car.carName),
@@ -101,59 +101,5 @@ class HomeComponents extends StatelessWidget {
 
 
 
-  Row reservePrice(BuildContext context) {
-    return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Reserve Price ',
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              Container(
-                  padding: EdgeInsets.all(AppPading.p8),
-                  decoration: BoxDecoration(
-                    //color: ColorManager.primary.withOpacity(0.1),
-                    border: Border.all(
-                        color: Theme.of(context)
-                            .primaryColor
-                            .withOpacity(0.2)),
-                    borderRadius: BorderRadius.circular(10),
-                    color: ColorManager.white,
-                  ),
-                  height: SizeConfig.screenHeight(context) * 0.05,
-                  child: Center(
-                      child: Text('${car.reservePrice} EGP',
-                          style: Theme.of(context).textTheme.headlineLarge))),
-            ],
-          );
-  }
 
-  // CarouselSlider carouselSlider(BuildContext context) {
-  //   return CarouselSlider(
-  //             items: imagesList!.map((element) {
-  //               return CachedNetworkImage(
-  //                 imageUrl: element,
-  //                 fadeInDuration: Duration(milliseconds: 700),
-  //                 fadeInCurve: Curves.bounceInOut,
-  //                 fit: BoxFit.fill,
-  //                 width: SizeConfig.screenWidth(context) * 0.8,
-  //                 // height: SizeConfig.screenHeight(context)*0.2,
-  //               );
-  //             }).toList(),
-  //             options: CarouselOptions(
-  //               height: SizeConfig.screenHeight(context) * 0.2,
-  //               //aspectRatio: 16/9,
-  //               viewportFraction: 0.8,
-  //               initialPage: 0,
-  //               enableInfiniteScroll: true,
-  //               reverse: false,
-  //               autoPlay: imagesList!.length != 1 ? true : false,
-  //               autoPlayInterval: Duration(seconds: 3),
-  //               autoPlayAnimationDuration: Duration(milliseconds: 800),
-  //               autoPlayCurve: Curves.fastOutSlowIn,
-  //               enlargeCenterPage: true,
-  //               enlargeFactor: 0.3,
-  //               scrollDirection: Axis.horizontal,
-  //             ));
-  // }
 }

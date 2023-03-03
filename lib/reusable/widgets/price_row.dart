@@ -6,7 +6,7 @@ import 'package:voomeg/core/global/resources/values_manager.dart';
 class PriceRowWidget extends StatelessWidget {
   const PriceRowWidget({Key? key, required this.title, required this.price}) : super(key: key);
   final String title;
-  final num price;
+  final String price;
   @override
   Widget build(BuildContext context) {
     return Row(

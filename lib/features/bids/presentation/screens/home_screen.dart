@@ -8,6 +8,8 @@ import 'package:voomeg/features/bids/presentation/components/home_components.dar
 import 'package:voomeg/features/bids/presentation/components/profile_components.dart';
 import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/offers_blocs/user_offers_bloc.dart';
+import 'package:voomeg/reusable/widgets/error_widget.dart';
+import 'package:voomeg/reusable/widgets/loading_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -42,91 +44,105 @@ class _HomeScreenState extends State<HomeScreen> {
           BlocProvider.of<HomeBloc>(context).add(ResetHomeDataEvent());
         //  Navigator.pushReplacementNamed(context, AppRoutesName.login);
 
-          Future.delayed(Duration(milliseconds: 200),()=> Navigator.pushReplacementNamed(context, AppRoutesName.login));
+          Future.delayed(Duration(milliseconds: 100),()=> Navigator.pushReplacementNamed(context, AppRoutesName.login));
         }
       },
-      child: RefreshIndicator(
-        onRefresh: () async {
-          BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
-        },
-        child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, AppRoutesName.addCar);
-              },
-              child: Icon(Icons.add),
-              backgroundColor: ColorManager.primary),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          body: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-            if (state.requestState == RequestState.isLoading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state.requestState == RequestState.isError) {
-              return Center(
-                child: Card(
-                  child: Center(
-                    child: Text('${state.errorMessage}'),
-                  ),
-                ),
-              );
-            } else {
-              if (state.currentNavBarIndex == 0) {
-                return ListView.builder(
-                    itemCount: state.carsForSaleList.length,
-                    itemBuilder: (context, index) {
-                      return HomeComponents(
-                        userUid: state.currentUser!.id,
-                        userFunction: () {
-                          BlocProvider.of<UserOffersBloc>(context).add(GetCurrentSaleEvent(state.carsForSaleList[index]));
-
-                          BlocProvider.of<UserOffersBloc>(context).add(FetchOffersForCarEvent(state.currentUser!.id,state.carsForSaleList[index].saleId));
-                         Navigator.pushNamed(context, AppRoutesName.userOffers);
-                        },
-
-                        traderFunction: () {},
-                        car: state.carsForSaleList[index],
-                        imageUrl: state.carsForSaleList[index].photosUrls[0],
-                        imagesList: state.carsForSaleList[index].photosUrls,
-                      );
-                    });
-              } else {
-                return Column(
-                  children: [
-                    ProfileComponents(userEntity: state.currentUser!),
-                    ElevatedButton(
-                        onPressed: () {
-                          BlocProvider.of<HomeBloc>(context)
-                              .add(LogOutEvent(state.userUid));
-                        },
-                        child: Text('Log out'))
-                  ],
+      child: WillPopScope(
+        onWillPop: ()async=>false,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
+          },
+          child: Scaffold(
+            appBar: AppBar(title: Text('Your Cars'),
+            leading: SizedBox(),
+            ),
+            floatingActionButton: floatingActionButtonUser(context),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            body: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+              if (state.requestState == RequestState.isLoading) {
+                return Center(
+                  child: LoadingJsonWidget(),
                 );
+              } else if (state.requestState == RequestState.isError) {
+                return Center(
+                  child: ErrorJsonWidget(errorMessage: state.errorMessage)
+                );
+              } else {
+                if (state.currentNavBarIndex == 0) {
+                  return userCarsList(state);
+                } else {
+                  return Column(
+                    children: [
+                      ProfileComponents(userEntity: state.currentUser!),
+                      ElevatedButton(
+                          onPressed: () {
+                            BlocProvider.of<HomeBloc>(context)
+                                .add(LogOutEvent(state.userUid));
+                          },
+                          child: Text('Log out'))
+                    ],
+                  );
+                }
               }
-            }
-          }),
-          bottomNavigationBar: BlocBuilder<HomeBloc, HomeState>(
-            builder: (context, state) {
-              return BottomNavigationBar(
-                currentIndex: state.currentNavBarIndex,
-                onTap: (val) {
-                  BlocProvider.of<HomeBloc>(context).add(ChangePageEvent(val));
-                },
-                selectedItemColor: ColorManager.primary,
-                unselectedItemColor: ColorManager.lightGrey,
-                items: [
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.home), label: 'Home'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.person), label: 'Profile'),
-                ],
-              );
-            },
+            }),
+            bottomNavigationBar: BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                return buttonNavBar(state, context);
+              },
+            ),
           ),
         ),
       ),
     );
+  }
+
+  FloatingActionButton floatingActionButtonUser(BuildContext context) {
+    return FloatingActionButton(
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutesName.addCar);
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Theme.of(context).primaryColor);
+  }
+
+  BottomNavigationBar buttonNavBar(HomeState state, BuildContext context) {
+    return BottomNavigationBar(
+              currentIndex: state.currentNavBarIndex,
+              onTap: (val) {
+                BlocProvider.of<HomeBloc>(context).add(ChangePageEvent(val));
+              },
+              selectedItemColor: Theme.of(context).primaryColor,
+              unselectedItemColor: ColorManager.lightGrey,
+              items: [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.home), label: 'Home'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person), label: 'Profile'),
+              ],
+            );
+  }
+
+  ListView userCarsList(HomeState state) {
+    return ListView.builder(
+                  itemCount: state.carsForSaleList.length,
+                  itemBuilder: (context, index) {
+                    return HomeComponents(
+                      userUid: state.currentUser!.id,
+                      userFunction: () {
+                        BlocProvider.of<UserOffersBloc>(context).add(GetCurrentSaleEvent(state.carsForSaleList[index]));
+
+                        BlocProvider.of<UserOffersBloc>(context).add(FetchOffersForCarEvent(state.currentUser!.id,state.carsForSaleList[index].saleId));
+                       Navigator.pushNamed(context, AppRoutesName.userOffers);
+                      },
+
+                      traderFunction: () {},
+                      car: state.carsForSaleList[index],
+                      imageUrl: state.carsForSaleList[index].photosUrls[0],
+                      imagesList: state.carsForSaleList[index].photosUrls,
+                    );
+                  });
   }
 
 }

@@ -36,44 +36,45 @@ class TraderHomeScreen extends StatelessWidget {
 
         }
       },
-      child: RefreshIndicator(
-        onRefresh: () async {
-          BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
-        },
-        child: Scaffold(
-          appBar:  AppBar(
-            title: Text('Available Auctions'),
-            leading: SizedBox(),
-          ),
+      child: WillPopScope(
+        onWillPop: ()async=>false,
 
-          body:
-          BlocBuilder<HomeBloc,HomeState>(builder: (context,state){
+        child: RefreshIndicator(
+          onRefresh: () async {
+            BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
+          },
+          child: Scaffold(
 
-              if(state.requestState==RequestState.isLoading){
-                return Center(child: LoadingJsonWidget(),);
-              }else if (state.requestState==RequestState.isError){
-                return Center(child:  ErrorJsonWidget(errorMessage: state.errorMessage));
-              }else{
-                if(state.currentNavBarIndex== 0 ){
-                  return carsForSaleListWidget(state);
+
+            body:
+            BlocBuilder<HomeBloc,HomeState>(builder: (context,state){
+
+                if(state.requestState==RequestState.isLoading){
+                  return Center(child: LoadingJsonWidget(),);
+                }else if (state.requestState==RequestState.isError){
+                  return Center(child:  ErrorJsonWidget(errorMessage: state.errorMessage));
                 }else{
-                  return Column(
-                    children: [
-                      ProfileComponents(userEntity: state.currentUser!),
-                      ElevatedButton(onPressed: (){
-                        BlocProvider.of<HomeBloc>(context).add(LogOutEvent(state.userUid));
-                      }, child: Text('Log out'))
-                    ],
-                  );
+                  if(state.currentNavBarIndex== 0 ){
+                    return carsForSaleListWidget(state);
+                  }else{
+                    return Column(
+                      children: [
+                        ProfileComponents(userEntity: state.currentUser!),
+                        ElevatedButton(onPressed: (){
+                          BlocProvider.of<HomeBloc>(context).add(LogOutEvent(state.userUid));
+                        }, child: Text('Log out'))
+                      ],
+                    );
+                  }
                 }
-              }
 
-            }),
+              }),
 
-          bottomNavigationBar: BlocBuilder<HomeBloc, HomeState>(
-            builder: (context, state) {
-              return BottomNavigationBarWidget(state, context);
-            },
+            bottomNavigationBar: BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                return BottomNavigationBarWidget(state, context);
+              },
+            ),
           ),
         ),
       ),
