@@ -6,6 +6,7 @@ import 'package:voomeg/core/global/routes/app_routes_names.dart';
 import 'package:voomeg/features/bids/presentation/components/home_components.dart';
 import 'package:voomeg/features/bids/presentation/components/profile_components.dart';
 import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
+import 'package:voomeg/features/bids/presentation/controller/offers_blocs/add_offer_bloc.dart';
 
 class TraderHomeScreen extends StatelessWidget {
   const TraderHomeScreen({Key? key}) : super(key: key);
@@ -50,6 +51,17 @@ class TraderHomeScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return HomeComponents(userUid: state.carsForSaleList[index].userId,
                           car: state.carsForSaleList[index],
+                          userFunction: (){},
+                          traderFunction: (){
+                          BlocProvider.of<AddOfferBloc>(context).add(GetCurrentCarForSaleEvent(carForSale: state.carsForSaleList[index]));
+                          print('current logged in trader  id we sending to add offer ${state.currentUser!.id}');
+                          BlocProvider.of<AddOfferBloc>(context).add(GetCurrentTrader(state.currentUser!));
+
+                          BlocProvider.of<AddOfferBloc>(context).add(GetSaleUserEvent(state.carsForSaleList[index].userId));
+                          print('User We getting from car model is ${state.carsForSaleList[index].userId}');
+                          Navigator.pushNamed(context, AppRoutesName.addOffer);
+                          },
+                          isTrader: true,
                           imageUrl: state.carsForSaleList[index].photosUrls[0],
                         );
                       });

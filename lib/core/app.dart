@@ -8,6 +8,8 @@ import 'package:voomeg/features/auth/presentation/controller/login_bloc.dart';
 import 'package:voomeg/features/auth/presentation/controller/register_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/add_car_for_sale_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
+import 'package:voomeg/features/bids/presentation/controller/offers_blocs/add_offer_bloc.dart';
+import 'package:voomeg/features/bids/presentation/controller/offers_blocs/user_offers_bloc.dart';
 
 import 'utils/services/service_locator.dart';
 
@@ -27,6 +29,10 @@ class MyApp extends StatelessWidget {
             create: (_)=>HomeBloc(sl(),sl(),sl(),sl(),sl())),
         BlocProvider<AddCarForSaleBloc>(
             create: (_)=>AddCarForSaleBloc(sl(),sl(),sl())),
+        BlocProvider<AddOfferBloc>(
+            create: (_)=>AddOfferBloc(sl(),sl())),
+        BlocProvider<UserOffersBloc>(
+            create: (_)=>UserOffersBloc(sl(),sl(),sl())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

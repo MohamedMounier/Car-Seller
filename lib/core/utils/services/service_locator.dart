@@ -12,16 +12,24 @@ import 'package:voomeg/features/auth/presentation/controller/login_bloc.dart';
 import 'package:voomeg/features/auth/presentation/controller/register_bloc.dart';
 import 'package:voomeg/features/bids/data/datasource/remote_bids_data_source.dart';
 import 'package:voomeg/features/bids/data/repository/car_for_sale_repo.dart';
+import 'package:voomeg/features/bids/data/repository/offers_repo.dart';
 import 'package:voomeg/features/bids/domain/repository/base_car_for_sale_repo.dart';
+import 'package:voomeg/features/bids/domain/repository/base_offers_repo.dart';
 import 'package:voomeg/features/bids/domain/usecases/add_car_to_database_use_case.dart';
 import 'package:voomeg/features/bids/domain/usecases/get_available_cars_for_sale_use_case.dart';
 import 'package:voomeg/features/bids/domain/usecases/get_image_url_use_case.dart';
 import 'package:voomeg/features/bids/domain/usecases/get_user_cars_for_sale_use_case.dart';
 import 'package:voomeg/features/bids/domain/usecases/get_user_use_case.dart';
 import 'package:voomeg/features/bids/domain/usecases/log_out_use_case.dart';
+import 'package:voomeg/features/bids/domain/usecases/offers_user_cases/accept_offer_use_case.dart';
+import 'package:voomeg/features/bids/domain/usecases/offers_user_cases/add_offer_use_case.dart';
+import 'package:voomeg/features/bids/domain/usecases/offers_user_cases/get_all_offers_for_user_use_case.dart';
+import 'package:voomeg/features/bids/domain/usecases/offers_user_cases/get_offers_for_car_use_case.dart';
 import 'package:voomeg/features/bids/domain/usecases/upload_images_use_case.dart';
 import 'package:voomeg/features/bids/presentation/controller/add_car_for_sale_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
+import 'package:voomeg/features/bids/presentation/controller/offers_blocs/add_offer_bloc.dart';
+import 'package:voomeg/features/bids/presentation/controller/offers_blocs/user_offers_bloc.dart';
 
 final sl=GetIt.instance;
 
@@ -39,6 +47,8 @@ class ServiceLocator{
      sl.registerFactory(() => LoginBloc(sl(), sl(),sl()));
      sl.registerFactory(() => HomeBloc(sl(),sl(),sl(),sl(),sl()));
      sl.registerFactory(() => AddCarForSaleBloc(sl(),sl(),sl()));
+     sl.registerFactory(() => AddOfferBloc(sl(),sl()));
+     sl.registerFactory(() => UserOffersBloc(sl(),sl(),sl()));
     // sl.registerFactory(() => TvBloc(sl()));
 
     ///useCases
@@ -60,9 +70,16 @@ class ServiceLocator{
     sl.registerLazySingleton<GetUserCarsForSalesUseCase>(() => GetUserCarsForSalesUseCase(sl()));
     sl.registerLazySingleton<GetAvailableCarsForSaleUseCase>(() => GetAvailableCarsForSaleUseCase(sl()));
 
+    sl.registerLazySingleton<AddOfferUSeCase>(() => AddOfferUSeCase(sl()));
+
+    sl.registerLazySingleton<GetAllOffersForUserUseCase>(() => GetAllOffersForUserUseCase(sl()));
+    sl.registerLazySingleton<GetOffersForCarUseCase>(() => GetOffersForCarUseCase(sl()));
+    sl.registerLazySingleton<AcceptOfferUseCase>(() => AcceptOfferUseCase(sl()));
+
     ///Repository
     sl.registerLazySingleton<BaseUserRepo>(() => UserRepo(sl()));
     sl.registerLazySingleton<BaseCarForSaleRepo>(() => CarForSaleRepo(sl()));
+    sl.registerLazySingleton<BaseOffersRepo>(() => OffersRepo(sl()));
      //sl.registerLazySingleton<BaseTvRepo>(() => TvRepo(sl()));
 
     ///DataSource

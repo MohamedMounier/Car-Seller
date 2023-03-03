@@ -6,11 +6,13 @@ import 'package:voomeg/core/global/resources/values_manager.dart';
 import 'package:voomeg/features/bids/domain/entities/for_sale_cars.dart';
 
 class HomeComponents extends StatelessWidget {
-  const HomeComponents({Key? key, required this.userUid,required this.car,required this.imageUrl}) : super(key: key);
+  const HomeComponents({Key? key, required this.userUid,required this.car,required this.imageUrl,this.isTrader=false,required this.traderFunction,required this.userFunction}) : super(key: key);
   final String userUid;
   final CarForSale car;
   final String imageUrl;
-
+   final bool isTrader;
+   final Function userFunction;
+   final Function traderFunction;
   @override
   Widget build(BuildContext context) {
     return  Container(
@@ -46,8 +48,16 @@ class HomeComponents extends StatelessWidget {
                 Text('${userUid} EGP',style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
-
-          ],
+            Visibility(
+              visible: isTrader,
+                child: ElevatedButton(onPressed: (){
+                  traderFunction();
+                }, child: Text('Add Offer')),
+            replacement:ElevatedButton(onPressed: (){
+              userFunction();
+            }, child: Text('Show Offers') ,
+            ),
+            )],
         ),
       ),
     );

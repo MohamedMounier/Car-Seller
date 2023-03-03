@@ -7,15 +7,21 @@ import 'package:image_picker/image_picker.dart';
 import 'package:voomeg/core/global/resources/strings_manager.dart';
 import 'package:voomeg/features/bids/data/datasource/fire_store_consts.dart';
 import 'package:voomeg/features/bids/data/models/car_for_sale_model.dart';
+import 'package:voomeg/features/bids/data/models/offer_model.dart';
 
 abstract class BaseBidsRemoteDataSource{
   Future<List<CarForSaleModel>>getUserCarsForSale({required String userId});
   Future<void> addCar(CarForSaleModel car);
   //Future<void> addCarImagesToStorage({required List<File> images,required String saleId});
-  Future<void> addCarImagesToStorage({required List<XFile>chosenImages,required String saleId ,required List<dynamic>urls});
   Future<Reference> savingImageToFireStorage({required XFile image,required String saleId});
   Future<String> getUploadedImageUrl({required Reference reference});
   Future<List<CarForSaleModel>>getAvailableCarsForSale();
+  Future<void> addOffer(OfferModel offer);
+
+  Future<List<OfferModel>> fetchAllUserOffers({required String userUid});
+  Future<List<OfferModel>> fetchOffersForOneCar({required String userUid,required String saleId});
+  Future<void> acceptOffer(OfferModel offer);
+
 
 
 
@@ -47,23 +53,6 @@ class BidsRemoteDataSource implements BaseBidsRemoteDataSource{
     return await carsList;
   }
 
-  @override
-  Future<void> addCarImagesToStorage({required List<XFile>chosenImages,required String saleId ,required List<dynamic>urls}) async {
-    // int i = 1;
-    //
-    // for (var image in chosenImages) {
-    //   setState(() {
-    //     val= i / images.length ;
-    //   });
-    //   var ref = firebaseStorage.ref().child('$saleId').child('${image.path}');
-    //   await ref.putFile(File(image.path)).whenComplete(() async {
-    //     await ref.getDownloadURL().then((value) {
-    //       urls.add(value);
-    //       i++;
-    //     });
-    //   });
-    // }
-  }
 
   @override
   Future<Reference> savingImageToFireStorage({required XFile image,required String saleId}) async{
@@ -86,5 +75,78 @@ class BidsRemoteDataSource implements BaseBidsRemoteDataSource{
    print(carsList);
    return await carsList;
   }
+
+  @override
+  Future<void> addOffer(OfferModel offer)async {
+    return await fireStore.collection(BidsFireStoreConsts.offers).doc(offer.traderUid).collection(BidsFireStoreConsts.traderOffers).doc(offer.saleId).set(offer.toFireStore());
+   //  fireStore.collection(BidsFireStoreConsts.offers).doc(offer.offerId).set(offer.toFireStore());
+
+  }
+
+  @override
+  Future<List<OfferModel>> fetchAllUserOffers({required String userUid})async {
+    print('user id is $userUid');
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    List<OfferModel>offersList=[];
+    await fireStore
+        .collection(BidsFireStoreConsts.offers).get().then((value)async {
+      for(var doc in value.docs){
+        await fireStore.collection(BidsFireStoreConsts.offers)
+            .doc(doc.id)
+            .collection(BidsFireStoreConsts.traderOffers)
+            .where('userUid', isEqualTo: userUid)
+            .get().then((value2)async {
+          print('Doc valueeeeee ${value2.docs}');
+          print('Doc valueeeeee ${value2.docs.map((e) => e.data())}');
+          offersList.addAll(List<QueryDocumentSnapshot>.from(value2.docs).map((e) => OfferModel.fromFireBase(e.data())).toList());
+
+        });
+
+      }
+    });
+
+    return await offersList;
+  }
+
+  @override
+  Future<List<OfferModel>> fetchOffersForOneCar({required String userUid,required String saleId})async {
+   List<OfferModel>offersForSale=[];
+    print('user id is $userUid');
+
+
+    await fireStore
+        .collection(BidsFireStoreConsts.offers).get().then((value)async {
+      print('value is ${value.docs}');
+      for(var doc in value.docs){
+
+        await fireStore.collection(BidsFireStoreConsts.offers)
+            .doc(doc.id)
+            .collection(BidsFireStoreConsts.traderOffers)
+            .where('userUid', isEqualTo: userUid ).where('saleId',isEqualTo:saleId)
+            .get().then((value2)async {
+          print('Doc valueeeeee ${value2.docs.where((element) => element.data()['saleId']==saleId).map((e) => e.data()).toList()}');
+          var desiredData=value2.docs;
+          offersForSale.addAll(List<QueryDocumentSnapshot>.from(desiredData).map((e) => OfferModel.fromFireBase(e.data())).toList());
+
+        });
+
+      }
+    });
+
+    return  await offersForSale;
+
+
+  }
+  @override
+ Future<void> acceptOffer(OfferModel offer)async{
+   FirebaseFirestore firestore = FirebaseFirestore.instance;
+   await firestore.collection(BidsFireStoreConsts.offers).doc(offer.traderUid).collection(BidsFireStoreConsts.traderOffers).doc(offer.saleId).update({'offerStatus':'Accepted'}).whenComplete(()async {
+     await firestore.collection(BidsFireStoreConsts.forSale).doc(offer.saleId).update({'saleStatus':'Not Available','soldAt':Timestamp.now()});
+   });
+
+ }
+
+
+
 
 }
