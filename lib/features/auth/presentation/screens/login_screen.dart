@@ -49,7 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
             listener: (context, state) {
               if (state.loginSteps==LoginSteps.isSavingUserUidSuccess&&state.requestState==RequestState.isSucc) {
 
-                //Navigator.pop(context);
 
 
                 BlocProvider.of<HomeBloc>(context).add( FetchUserTypeEvent());
@@ -61,15 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         context, AppRoutesName.traderHome)
                     : Navigator.pushReplacementNamed(
                         context, AppRoutesName.home);
-               // state.requestState=RequestState.isNone;
               } else if (state.requestState == RequestState.isLoading&&state.loginSteps==LoginSteps.isLoginUserIn) {
-                // showDialog(
-                //     context: context,
-                //     builder: (builder) {
-                //       return AlertDialog(
-                //         content: Text('Loading ....'),
-                //       );
-                //     });
+
               } else if (state.requestState == RequestState.isError) {
 
                 ScaffoldMessenger.of(context).showSnackBar(
