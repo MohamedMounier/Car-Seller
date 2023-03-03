@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
               print('State is ${state.requestState}');
               if (state.loginSteps==LoginSteps.isSavingUserUidSuccess&&state.requestState==RequestState.isSucc) {
 
-                Navigator.pop(context);
+                //Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Successfully Logged in ...')));
 

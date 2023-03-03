@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:voomeg/core/utils/services/app_prefrences.dart';
+import 'package:voomeg/core/utils/services/service_locator.dart';
 import 'color_manager.dart';
 import 'fonts_manager.dart';
 import 'styles_manager.dart';
@@ -8,7 +10,7 @@ import 'values_manager.dart';
 ThemeData getAppTheme(){
   return ThemeData(
     // colors
-    primaryColor: ColorManager.primary,
+    primaryColor: sl<AppPreferences>().isTypeTrader()?ColorManager.ourPrimary:ColorManager.primary,
     primaryColorLight: ColorManager.lightPrimary,
     primaryColorDark: ColorManager.darkPrimary,
     disabledColor: ColorManager.grey1,
@@ -23,8 +25,8 @@ ThemeData getAppTheme(){
     //App bar Theme
     appBarTheme: AppBarTheme(
       centerTitle: true,
-      color: ColorManager.primary,
-      elevation: AppSize.s4,
+      color: sl<AppPreferences>().isTypeTrader()?ColorManager.ourPrimary.withOpacity(0.4):ColorManager.primary.withOpacity(0.4),
+      elevation: AppSize.s1_5,
       shadowColor: ColorManager.lightPrimary,
       titleTextStyle: getRegularTextStyle(fontSize: FontSize.s16,color: ColorManager.white)
     ),
@@ -32,14 +34,14 @@ ThemeData getAppTheme(){
     buttonTheme: ButtonThemeData(
       shape: const StadiumBorder(),
       disabledColor: ColorManager.grey1,
-      buttonColor: ColorManager.primary,
+      buttonColor:sl<AppPreferences>().isTypeTrader()?ColorManager.ourPrimary:ColorManager.primary,
       splashColor: ColorManager.lightPrimary
     ),
     //elevated button theme data
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         textStyle:  getRegularTextStyle(fontSize:FontSize.s17,color: ColorManager.white),
-        primary: ColorManager.primary,
+        backgroundColor: sl<AppPreferences>().isTypeTrader()?ColorManager.ourPrimary:ColorManager.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSize.s12)
         )
@@ -70,7 +72,7 @@ ThemeData getAppTheme(){
         // focused border side
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: ColorManager.primary,
+              color:sl<AppPreferences>().isTypeTrader()?ColorManager.ourPrimary:ColorManager.primary,
               width: AppSize.s1_5,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(AppSize.s8))
@@ -86,7 +88,7 @@ ThemeData getAppTheme(){
       // focused error border
         focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: ColorManager.primary,
+              color: sl<AppPreferences>().isTypeTrader()?ColorManager.ourPrimary:ColorManager.primary,
               width: AppSize.s1_5,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(AppSize.s8))

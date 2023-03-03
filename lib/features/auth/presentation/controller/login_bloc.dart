@@ -99,8 +99,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }, (r) {
       emit(state.copyWith(isTrader: event.isTrader,requestState: RequestState.isNone,loginSteps: LoginSteps.isNone));
     });
-    print('Saved User Type is Trader?${appPrefrences.isTypeTrader()}');
-    print('Saved User Type is Trader?${state.isTrader}');
+
   }
 }
 

@@ -34,6 +34,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<LogOutEvent>(onLogOutUser);
     on<ResetUserTypeEvent>(onResetUserType);
     on<ResetUserUidEvent>(onResetUserEvent);
+    on<ResetHomeDataEvent>(onResetHomeData);
   }
 
   final AppPreferences appPrefrences;
@@ -107,6 +108,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> onFetchUserType(
       FetchUserTypeEvent event, Emitter<HomeState> emit) async {
     emit(state.copyWith(
+      currentNavBarIndex: 0,
         requestState: RequestState.isLoading,
         step: HomeScreenDataSteps.isFetchingUserType));
 
@@ -188,5 +190,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     resetUserId.fold((l) => emit(state.copyWith(
         requestState: RequestState.isError, errorMessage: l.errorMessage,localDataStats: LocalDataStats.isRemovedUidError)),(r) => emit(state.copyWith(
         requestState: RequestState.isSucc,localDataStats: LocalDataStats.isRemovedUidSucc,currentUser: null,step:HomeScreenDataSteps.isNone)));
+  }
+
+  FutureOr<void> onResetHomeData(ResetHomeDataEvent event, Emitter<HomeState> emit) {
+    //state.currentNavBarIndex=0;
+    emit(state.copyWith(requestState: RequestState.isNone));
   }
 }

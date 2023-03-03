@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:voomeg/core/enums/enums.dart';
+import 'package:voomeg/core/global/resources/assets_manager.dart';
 import 'package:voomeg/core/global/resources/color_manager.dart';
+import 'package:voomeg/core/global/resources/size_config.dart';
 import 'package:voomeg/core/global/routes/app_routes_names.dart';
 import 'package:voomeg/features/bids/presentation/components/home_components.dart';
 import 'package:voomeg/features/bids/presentation/components/profile_components.dart';
 import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/offers_blocs/add_offer_bloc.dart';
+import 'package:voomeg/reusable/widgets/error_widget.dart';
+import 'package:voomeg/reusable/widgets/loading_widget.dart';
 
 class TraderHomeScreen extends StatelessWidget {
   const TraderHomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<HomeBloc>(context).add(FetchUserEvent());
+    BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
     return BlocListener<HomeBloc, HomeState>(
       listenWhen: (previous,current){
        return current.localDataStats!=previous.localDataStats;
@@ -34,37 +41,21 @@ class TraderHomeScreen extends StatelessWidget {
           BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
         },
         child: Scaffold(
+          appBar:  AppBar(
+            title: Text('Available Auctions'),
+            leading: SizedBox(),
+          ),
 
           body:
           BlocBuilder<HomeBloc,HomeState>(builder: (context,state){
 
               if(state.requestState==RequestState.isLoading){
-                return Center(child: CircularProgressIndicator(),);
+                return Center(child: LoadingJsonWidget(),);
               }else if (state.requestState==RequestState.isError){
-                return Center(child:  Card(
-                  child: Center(child: Text('${state.errorMessage}'),),
-                ),);
+                return Center(child:  ErrorJsonWidget(errorMessage: state.errorMessage));
               }else{
                 if(state.currentNavBarIndex== 0 ){
-                  return ListView.builder(
-                      itemCount: state.carsForSaleList.length,
-                      itemBuilder: (context, index) {
-                        return HomeComponents(userUid: state.carsForSaleList[index].userId,
-                          car: state.carsForSaleList[index],
-                          userFunction: (){},
-                          traderFunction: (){
-                          BlocProvider.of<AddOfferBloc>(context).add(GetCurrentCarForSaleEvent(carForSale: state.carsForSaleList[index]));
-                          print('current logged in trader  id we sending to add offer ${state.currentUser!.id}');
-                          BlocProvider.of<AddOfferBloc>(context).add(GetCurrentTrader(state.currentUser!));
-
-                          BlocProvider.of<AddOfferBloc>(context).add(GetSaleUserEvent(state.carsForSaleList[index].userId));
-                          print('User We getting from car model is ${state.carsForSaleList[index].userId}');
-                          Navigator.pushNamed(context, AppRoutesName.addOffer);
-                          },
-                          isTrader: true,
-                          imageUrl: state.carsForSaleList[index].photosUrls[0],
-                        );
-                      });
+                  return carsForSaleListWidget(state);
                 }else{
                   return Column(
                     children: [
@@ -81,28 +72,53 @@ class TraderHomeScreen extends StatelessWidget {
 
           bottomNavigationBar: BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
-              return BottomNavigationBar(
-                currentIndex: state.currentNavBarIndex,
-                onTap: (val) {
-                  BlocProvider.of<HomeBloc>(context).add(ChangePageEvent(val));
-                  if(state.currentNavBarIndex==0){
-                    BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
-                  }else{
-                    BlocProvider.of<HomeBloc>(context).add(FetchUserEvent());
-                  }
-                },
-                selectedItemColor: ColorManager.ourPrimary,
-                unselectedItemColor: ColorManager.lightGrey,
-                items: [
-                  BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.person), label: 'Profile'),
-                ],
-              );
+              return BottomNavigationBarWidget(state, context);
             },
           ),
         ),
       ),
     );
+  }
+
+  BottomNavigationBar BottomNavigationBarWidget(HomeState state, BuildContext context) {
+    return BottomNavigationBar(
+              currentIndex: state.currentNavBarIndex,
+              onTap: (val) {
+                BlocProvider.of<HomeBloc>(context).add(ChangePageEvent(val));
+                if(state.currentNavBarIndex==0){
+                  BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
+                }else{
+                  BlocProvider.of<HomeBloc>(context).add(FetchUserEvent());
+                }
+              },
+              selectedItemColor: ColorManager.ourPrimary,
+              unselectedItemColor: ColorManager.lightGrey,
+              items: [
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person), label: 'Profile'),
+              ],
+            );
+  }
+
+  ListView carsForSaleListWidget(HomeState state) {
+    return ListView.builder(
+                    itemCount: state.carsForSaleList.length,
+                    itemBuilder: (context, index) {
+                      return HomeComponents(userUid: state.carsForSaleList[index].userId,
+                        car: state.carsForSaleList[index],
+                        userFunction: (){},
+                        traderFunction: (){
+                        BlocProvider.of<AddOfferBloc>(context).add(GetCurrentCarForSaleEvent(carForSale: state.carsForSaleList[index]));
+                        BlocProvider.of<AddOfferBloc>(context).add(GetCurrentTrader(state.currentUser!));
+
+                        BlocProvider.of<AddOfferBloc>(context).add(GetSaleUserEvent(state.carsForSaleList[index].userId));
+                        Navigator.pushNamed(context, AppRoutesName.addOffer);
+                        },
+                        isTrader: true,
+                        imageUrl: state.carsForSaleList[index].photosUrls[0],
+                        imagesList:state.carsForSaleList[index].photosUrls ,
+                      );
+                    });
   }
 }

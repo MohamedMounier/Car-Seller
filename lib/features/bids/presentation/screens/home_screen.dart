@@ -8,10 +8,9 @@ import 'package:voomeg/features/bids/presentation/components/home_components.dar
 import 'package:voomeg/features/bids/presentation/components/profile_components.dart';
 import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/offers_blocs/user_offers_bloc.dart';
-import 'package:voomeg/features/bids/presentation/screens/offers_screens/user_offers_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -39,9 +38,11 @@ class _HomeScreenState extends State<HomeScreen> {
             state.requestState == RequestState.isSucc) {
           BlocProvider.of<HomeBloc>(context).add(ResetUserUidEvent());
         } else if (state.localDataStats == LocalDataStats.isRemovedUidSucc &&
-            state.requestState == RequestState.isSucc) {
-          Navigator.pushReplacementNamed(context, AppRoutesName.login);
-          state.currentNavBarIndex = 0;
+            state.requestState == RequestState.isSucc&&state.currentNavBarIndex==1) {
+          BlocProvider.of<HomeBloc>(context).add(ResetHomeDataEvent());
+        //  Navigator.pushReplacementNamed(context, AppRoutesName.login);
+
+          Future.delayed(Duration(milliseconds: 200),()=> Navigator.pushReplacementNamed(context, AppRoutesName.login));
         }
       },
       child: RefreshIndicator(
@@ -87,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         traderFunction: () {},
                         car: state.carsForSaleList[index],
                         imageUrl: state.carsForSaleList[index].photosUrls[0],
+                        imagesList: state.carsForSaleList[index].photosUrls,
                       );
                     });
               } else {
@@ -127,57 +129,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  theWidget() {
-    return BlocBuilder<HomeBloc, HomeState>(
-      //bloc: HomeBloc(sl(),sl(),sl()),
-      builder: (context, state) {
-        if (state.requestState != RequestState.isLoading) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              BlocProvider.of<HomeBloc>(context).add(FetchUserCarsForSale());
-            },
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 700),
-              child: Visibility(
-                visible: state.currentNavBarIndex == 0,
-                child: ListView.builder(
-                    itemCount: state.carsForSaleList.length,
-                    itemBuilder: (context, index) {
-                      return HomeComponents(
-                        userUid: state.currentUser!.id,
-                        car: state.carsForSaleList[index],
-                        imageUrl: state.carsForSaleList[index].photosUrls[0],
-                        traderFunction: () {},
-                        userFunction: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => UserOffersScreen(
-                                        userUid: state.currentUser!.id,
-                                      )));
-                        },
-                      );
-                    }),
-                replacement: Column(
-                  children: [
-                    ProfileComponents(userEntity: state.currentUser!),
-                    ElevatedButton(
-                        onPressed: () {
-                          BlocProvider.of<HomeBloc>(context)
-                              .add(LogOutEvent(state.userUid));
-                        },
-                        child: Text('Log out'))
-                  ],
-                ),
-              ),
-            ),
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
-  }
 }

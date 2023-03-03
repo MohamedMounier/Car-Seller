@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:voomeg/core/enums/enums.dart';
 import 'package:voomeg/core/global/resources/color_manager.dart';
 
 class EditableInfoField extends StatefulWidget {
@@ -14,10 +13,12 @@ class EditableInfoField extends StatefulWidget {
         this.passwordIcon,
       this.isPassword,
       this.isObsecure,
+      this.label,
       })
       : super(key: key);
   final TextEditingController textEditingController;
   final String hint;
+   final String? label;
   final IconData iconName;
    Widget? passwordIcon;
   final TextInputType? keyboardType;
@@ -48,17 +49,18 @@ class _EditableInfoFieldState extends State<EditableInfoField> {
       // },
       onChanged: (value) {},
       obscureText: widget.isObsecure??false,
-      cursorColor: ColorManager.primary,
+      cursorColor: Theme.of(context).primaryColor,
       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
         //fontWeight: FontWeight.w300,
       ),
       decoration: InputDecoration(
+        labelText: widget.label??widget.hint,
           prefixIcon:Icon(widget.iconName) ,
-          prefixIconColor: ColorManager.primary,
+          prefixIconColor: Theme.of(context).primaryColor,
           suffix: widget.trailing ??  null,
           suffixIcon: widget.isPassword!?widget.passwordIcon:null,
           hintText: widget.hint,
-          hintStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+          hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
             fontWeight: FontWeight.w300,
             fontSize: 13,
             color: ColorManager.grey,

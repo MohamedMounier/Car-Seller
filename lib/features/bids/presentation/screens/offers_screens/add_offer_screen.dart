@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voomeg/core/enums/enums.dart';
 import 'package:voomeg/core/global/id_generator.dart';
+import 'package:voomeg/core/global/resources/size_config.dart';
 import 'package:voomeg/core/global/resources/values_manager.dart';
 import 'package:voomeg/features/bids/domain/entities/offer.dart';
 import 'package:voomeg/features/bids/presentation/components/home_components.dart';
 import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/offers_blocs/add_offer_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/offers_blocs/add_offer_bloc.dart';
+import 'package:voomeg/reusable/widgets/car_carouser_slider.dart';
 import 'package:voomeg/reusable/widgets/editable_text.dart';
+import 'package:voomeg/reusable/widgets/info_raw_medium.dart';
+import 'package:voomeg/reusable/widgets/loading_widget.dart';
+import 'package:voomeg/reusable/widgets/price_row.dart';
+import 'package:voomeg/reusable/widgets/raw_info_headline.dart';
 
 class AddOfferScreen extends StatelessWidget {
    AddOfferScreen({Key? key}) : super(key: key);
@@ -24,108 +30,106 @@ class AddOfferScreen extends StatelessWidget {
         // TODO: implement listener
       },
       child: Scaffold(
+        appBar: AppBar(title: Text('Offer A Price'),),
         body: BlocBuilder<AddOfferBloc, AddOfferState>(
           builder: (context, state) {
            if(state.getSaleUserState==RequestState.isLoading){
-             return Center(child: CircularProgressIndicator(),);
+             return Center(child: LoadingJsonWidget(),);
            }else if(state.getSaleUserState==RequestState.isError){
              return Center(child: Text('${state.getSaleUserStateErrorMessage}'),);
 
            }else{
              return Form(
                key: addOfferKey,
-               child: ListView(
-                 children: [
-                   SizedBox(
-                     height: 50,
-                   ),
-                   // HomeComponents(
-                   //   userUid: state.carForSale!.userId,
-                   //   car: state.carForSale!,
-                   //   imageUrl: state.carForSale!.photosUrls[0],
-                   //   function: (){},
-                   //   isTrader: true,
-                   // ),
+               child: Padding(
+                 padding: const EdgeInsets.all(AppPading.p20),
+                 child: ListView(
+                   children: [
+                     SizedBox(
+                       height: 50,
+                     ),
 
-                   Container(
-                     margin: const EdgeInsets.only(left: AppMargin.m22,right: AppMargin.m20,top: AppMargin.m50,bottom: AppMargin.m22),
-                     child: SingleChildScrollView(
-                       child: Column(
-                         crossAxisAlignment: CrossAxisAlignment.start,
-                         children: [
-                           CachedNetworkImage(
-                             imageUrl: state.carForSale!.photosUrls[0],
-                             fadeInDuration: Duration(milliseconds: 700),
-                             fadeInCurve: Curves.bounceInOut,
+                     Container(
+                       //margin: const EdgeInsets.only(left: AppMargin.m22,right: AppMargin.m20,top: AppMargin.m50,bottom: AppMargin.m22),
+                       child: SingleChildScrollView(
+                         child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
 
-                           ),
-                           Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                             children: [
-                               Text('Current Auctions',style: Theme.of(context).textTheme.headlineLarge,),
-                               Text('0',style: Theme.of(context).textTheme.headlineLarge),
-                             ],
-                           ),
-                           Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                             children: [
-                               Text('Reserve Price ',style: Theme.of(context).textTheme.headlineLarge,),
-                               Text('${state.carForSale!.reservePrice} EGP',style: Theme.of(context).textTheme.headlineLarge),
-                             ],
-                           ),
-                           Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                             children: [
-                               Text('UserId  ',style: Theme.of(context).textTheme.headlineLarge,),
-                               Text('${state.carForSale!.userId} EGP',style: Theme.of(context).textTheme.bodySmall),
-                             ],
-                           ),
-                           Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                             children: [
-                               Text('current trader id  ',style: Theme.of(context).textTheme.headlineLarge,),
-                               Text('${state.currentTrader!.id}',style: Theme.of(context).textTheme.bodySmall),
-                             ],
-                           ),
-                        // ElevatedButton(onPressed: (){}, child: Text('Send offer'))
-                         ],
+                             Container(
+                               padding: EdgeInsets.all(AppPading.p8),
+                               decoration: BoxDecoration(
+                                 border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.4)),
+                                 borderRadius: BorderRadius.circular(AppSize.s10)
+                               ),
+                               child: CarCarouselSlider(imagesList: state.carForSale!.photosUrls,
+                               carouselHeight: SizeConfig.screenHeight(context)*0.4,
+                               ),
+                             ),
+                             SizedBox(height: SizeConfig.screenHeight(context)*0.008,),
+
+                             PriceRowWidget(
+                               title: 'Reserve Price',
+                               price:  state.carForSale!.reservePrice,
+                             ),
+                             SizedBox(height: SizeConfig.screenHeight(context)*0.02,),
+                             InfoRowHeadline(title: 'Seller Name', info:  state.saleUser!.name),
+
+                             SizedBox(height: SizeConfig.screenHeight(context)*0.008,),
+                             InfoRowHeadline(title: 'Car Name', info:  state.carForSale!.carName),
+                             SizedBox(height: SizeConfig.screenHeight(context)*0.008,),
+                             InfoRowMedium(title: 'Model', info: state.carForSale!.carModel),
+                             SizedBox(height: SizeConfig.screenHeight(context)*0.008,),
+
+                             InfoRowMedium(title: 'Consumed Kilos', info:  state.carForSale!.carKilos),
+                             SizedBox(height: SizeConfig.screenHeight(context)*0.008,),
+                          Divider(color: Theme.of(context).primaryColor,)
+
+                          // ElevatedButton(onPressed: (){}, child: Text('Send offer'))
+                           ],
+                         ),
                        ),
                      ),
-                   ),
-                   SizedBox(height: 30,),
-                   EditableInfoField(
-                     isPassword: false,
-                     isObsecure: false,
-                     hint: "Put your price here",
-                     textEditingController: priceCtrl,
-                     keyboardType: TextInputType.number,
-                     iconName: Icons.money,
-                   ),
-                   SizedBox(height: 30,),
-                   ElevatedButton(
-                       onPressed: () {
-                         print('current  trader  id who who adds now  ${state.currentTrader!.id}');
-                         print('current  user   id from sale while adding now ${state.currentTrader!.id}');
-                         validateOffer(
-                             ctx: context,
-                             salePrice: state.carForSale!.reservePrice,
-                             func: (){
-                               BlocProvider.of<AddOfferBloc>(context).add(SendOfferEvent(
-                                   Offer(
-                                     saleId: state.carForSale!.saleId,
-                                     offerId:  state.carForSale!.saleId,
-                                     userUid:state.saleUser!.id,
-                                     userName: state.saleUser!.name,
-                                     traderUid: state.currentTrader!.id,
-                                     traderName: state.currentTrader!.name,
-                                     offerStatus: 'Sent',
-                                     price: num.parse(priceCtrl.text),)));
-                             }
-                         );
+                     SizedBox(height: SizeConfig.screenHeight(context)*0.008,),
+                     EditableInfoField(
+                       isPassword: false,
+                       isObsecure: false,
+                       hint: "Put your price here",
+                       label: "Price",
+                       textEditingController: priceCtrl,
+                       keyboardType: TextInputType.number,
+                       iconName: Icons.money,
+                     ),
 
-                       },
-                       child: Text('Send Offer'))
-                 ],
+                     SizedBox(height: SizeConfig.screenHeight(context)*0.008,),
+                     Padding(
+                       padding: const EdgeInsets.symmetric(horizontal: AppPading.p20,vertical: AppPading.p20),
+                       child: ElevatedButton(
+                           onPressed: () {
+                             print('current  trader  id who who adds now  ${state.currentTrader!.id}');
+                             print('current  user   id from sale while adding now ${state.currentTrader!.id}');
+                             validateOffer(
+                                 ctx: context,
+                                 salePrice: state.carForSale!.reservePrice,
+                                 func: (){
+                                   BlocProvider.of<AddOfferBloc>(context).add(SendOfferEvent(
+                                       Offer(
+                                         saleId: state.carForSale!.saleId,
+                                         offerId:  state.carForSale!.saleId,
+                                         userUid:state.saleUser!.id,
+                                         userName: state.saleUser!.name,
+                                         traderUid: state.currentTrader!.id,
+                                         traderName: state.currentTrader!.name,
+                                         offerStatus: 'Sent',
+                                         price: num.parse(priceCtrl.text),)));
+                                 }
+                             );
+
+                           },
+                           child: Text('Send Offer')),
+                     )
+                   ],
+                 ),
                ),
              );
            }
@@ -143,5 +147,6 @@ class AddOfferScreen extends StatelessWidget {
      }
     }
   }
+
 
 }
