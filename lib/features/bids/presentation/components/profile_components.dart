@@ -32,9 +32,9 @@ class ProfileComponents extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Text('Welcome ',style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 25,fontWeight: FontWeight.w400),),
+                FittedBox(child: Text('Welcome ',style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 25,fontWeight: FontWeight.w400),)),
                 SizedBox(width: SizeConfig.screenWidth(context)*0.02,),
-                Text(userEntity.name,style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 30,color: Theme.of(context).primaryColor),),
+                Flexible(child: Text(userEntity.name,style: Theme.of(context).textTheme.headlineLarge!.copyWith(fontSize: 30,color: Theme.of(context).primaryColor),)),
 
               ],
             ),

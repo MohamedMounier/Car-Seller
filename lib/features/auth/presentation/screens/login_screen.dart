@@ -7,6 +7,7 @@ import 'package:voomeg/core/global/routes/app_routes_names.dart';
 import 'package:voomeg/features/auth/domain/entities/login.dart';
 import 'package:voomeg/features/auth/presentation/controller/login_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
+import 'package:voomeg/reusable/toasts/app_toastss.dart';
 import 'package:voomeg/reusable/widgets/editable_text.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -50,14 +51,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           context, AppRoutesName.home);
                 } else if (state.requestState == RequestState.isLoading&&state.loginSteps==LoginSteps.isLoginUserIn) {
 
-                } else if (state.requestState == RequestState.isError) {
+                } else if (state.requestState == RequestState.isError&&state.loginSteps!=LoginSteps.isUserCheckingTypeFireError) {
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.loginErrorMessage)));
+                      snackBarToast(isError: true,text: state.loginErrorMessage));
                 }else if (state.loginSteps==LoginSteps.isLoginUserInSuccess){
+
+                  BlocProvider.of<LoginBloc>(context).add(CheckUserTypeFromFireEvent(state.user!.user!.uid,state.isTrader));
+                }else if (state.loginSteps==LoginSteps.isUserCheckingTypeFireSuccess){
 
                   BlocProvider.of<LoginBloc>(context).add(LoginSaveUserCheck(state.isUserSaved));
                   BlocProvider.of<LoginBloc>(context).add(SaveUserUidEvent(state.userUid));
+                } else if (state.requestState == RequestState.isError&&state.loginSteps==LoginSteps.isUserCheckingTypeFireError) {
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      snackBarToast(isError: true,text: 'Please , Make sure you are choosing the right type '));
                 }
               },
               child: Padding(

@@ -10,6 +10,7 @@ import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/offers_blocs/add_offer_bloc.dart';
 import 'package:voomeg/reusable/widgets/error_widget.dart';
 import 'package:voomeg/reusable/widgets/loading_widget.dart';
+import 'package:voomeg/reusable/widgets/no_data_widget.dart';
 
 class TraderHomeScreen extends StatelessWidget {
   const TraderHomeScreen({Key? key}) : super(key: key);
@@ -105,24 +106,29 @@ class TraderHomeScreen extends StatelessWidget {
             );
   }
 
-  ListView carsForSaleListWidget(HomeState state) {
-    return ListView.builder(
-                    itemCount: state.carsForSaleList.length,
-                    itemBuilder: (context, index) {
-                      return HomeComponents(userUid: state.carsForSaleList[index].userId,
-                        car: state.carsForSaleList[index],
-                        userFunction: (){},
-                        traderFunction: (){
-                        BlocProvider.of<AddOfferBloc>(context).add(GetCurrentCarForSaleEvent(carForSale: state.carsForSaleList[index]));
-                        BlocProvider.of<AddOfferBloc>(context).add(GetCurrentTrader(state.currentUser!));
+  Widget carsForSaleListWidget(HomeState state) {
+   if(state.carsForSaleList.isNotEmpty){
+     return ListView.builder(
+         itemCount: state.carsForSaleList.length,
+         itemBuilder: (context, index) {
+           return HomeComponents(userUid: state.carsForSaleList[index].userId,
+             car: state.carsForSaleList[index],
+             userFunction: (){},
+             traderFunction: (){
+               BlocProvider.of<AddOfferBloc>(context).add(GetCurrentCarForSaleEvent(carForSale: state.carsForSaleList[index]));
+               BlocProvider.of<AddOfferBloc>(context).add(GetCurrentTrader(state.currentUser!));
 
-                        BlocProvider.of<AddOfferBloc>(context).add(GetSaleUserEvent(state.carsForSaleList[index].userId));
-                        Navigator.pushNamed(context, AppRoutesName.addOffer);
-                        },
-                        isTrader: true,
-                        imageUrl: state.carsForSaleList[index].photosUrls[0],
-                        imagesList:state.carsForSaleList[index].photosUrls ,
-                      );
-                    });
+               BlocProvider.of<AddOfferBloc>(context).add(GetSaleUserEvent(state.carsForSaleList[index].userId));
+               Navigator.pushNamed(context, AppRoutesName.addOffer);
+             },
+             isTrader: true,
+             imageUrl: state.carsForSaleList[index].photosUrls[0],
+             imagesList:state.carsForSaleList[index].photosUrls ,
+           );
+         });
+   }else{
+     return Center(child: NoDataWidget(message: 'No Cars Available for Auctions'),);
+
+   }
   }
 }

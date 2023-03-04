@@ -14,6 +14,9 @@ enum RegisterSteps{
 }
 enum LoginSteps{
   isNone,
+  isUserCheckingTypeFire,
+  isUserCheckingTypeFireError,
+  isUserCheckingTypeFireSuccess,
   isLoginUserIn,
   isLoginUserInError,
   isLoginUserInSuccess,

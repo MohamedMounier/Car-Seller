@@ -71,5 +71,14 @@ class SaveUserTypeEvent extends LoginEvent {
   @override
   List<Object> get props => [isTrader];
 }
+class CheckUserTypeFromFireEvent extends LoginEvent {
+  final String checkedUserId;
+  final bool isTraderCheck;
+
+  const CheckUserTypeFromFireEvent(this.checkedUserId,this.isTraderCheck);
+
+  @override
+  List<Object> get props => [checkedUserId,isTraderCheck];
+}
 
 
