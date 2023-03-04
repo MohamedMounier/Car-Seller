@@ -27,7 +27,7 @@ class AddOfferScreen extends StatelessWidget {
       },
       listener: (context, state) {
         if(state.addOfferRequest ==RequestState.isSucc){
-          ScaffoldMessenger.of(context).showSnackBar(snackBarToast(text: 'Your Offer Has been sent so seller', isError: false));
+          ScaffoldMessenger.of(context).showSnackBar(snackBarToast(text: 'Your Offer Has been sent to seller', isError: false));
           Navigator.pop(context);
         }
       },

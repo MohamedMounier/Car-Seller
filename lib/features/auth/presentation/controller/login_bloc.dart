@@ -9,6 +9,7 @@ import 'package:voomeg/core/utils/services/app_prefrences.dart';
 import 'package:voomeg/features/auth/domain/entities/login.dart';
 import 'package:voomeg/features/auth/domain/usecases/log_user_in_use_case.dart';
 import 'package:voomeg/features/auth/domain/usecases/register_user_use_case.dart';
+import 'package:voomeg/features/bids/domain/usecases/get_user_use_case.dart';
 
 part 'login_event.dart';
 
@@ -17,9 +18,10 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final RegisterUserUseCase registerUserUseCase;
   final LogUserInUseCase logUserInUseCase;
+  final GetUserUseCase getUserUseCase;
   final AppPreferences appPrefrences;
 
-  LoginBloc(this.registerUserUseCase,this.logUserInUseCase,this.appPrefrences) : super(LoginState()) {
+  LoginBloc(this.registerUserUseCase,this.logUserInUseCase,this.appPrefrences,this.getUserUseCase) : super(LoginState()) {
     on<LoginEventLogUserIn>(onLogin);
     on<LoginSaveUserCheck>(onSaveLogin);
     on<SaveUserUidEvent>(onSaveUserUid);
@@ -27,6 +29,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<ShowPasswordEvent>(onShowPassword);
     on<ChangeUserTypeEvent>(onChangeUserType);
     on<SaveUserTypeEvent>(onSaveUSerType);
+    on<CheckUserTypeFromFireEvent>(onCheckUserTypeFromFire);
 
   }
 
@@ -102,6 +105,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(state.copyWith(isTrader: event.isTrader,requestState: RequestState.isNone,loginSteps: LoginSteps.isNone));
     });
 
+  }
+
+  FutureOr<void> onCheckUserTypeFromFire(CheckUserTypeFromFireEvent event, Emitter<LoginState> emit)async {
+    emit(state.copyWith(requestState: RequestState.isLoading,loginSteps: LoginSteps.isUserCheckingTypeFire));
+
+    var result = await getUserUseCase(GetUserUseCaseParameters(userId: event.checkedUserId, isTrader: event.isTraderCheck));
+    result.fold((l) {
+      emit(state.copyWith(requestState:RequestState.isError,loginErrorMessage: l.errorMessage,loginSteps: LoginSteps.isUserCheckingTypeFireError));
+
+    }, (r)  {
+    emit(state.copyWith(requestState:RequestState.isSucc,loginSteps: LoginSteps.isUserCheckingTypeFireSuccess));
+
+    });
   }
 }
 

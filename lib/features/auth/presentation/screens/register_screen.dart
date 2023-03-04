@@ -120,7 +120,7 @@ class RegisterScreen extends StatelessWidget {
                        builder: (context, state) {
                          return CheckboxListTile(
                            checkColor: Colors.white,
-                           activeColor: Colors.green,
+                           activeColor: Theme.of(context).primaryColor,
                            checkboxShape: const RoundedRectangleBorder(),
                            value: state.isTrader,
                            onChanged: (val) {

@@ -44,7 +44,7 @@ class ServiceLocator{
 
     ///blocs
      sl.registerFactory(() => RegisterBloc(sl(), sl()));
-     sl.registerFactory(() => LoginBloc(sl(), sl(),sl()));
+     sl.registerFactory(() => LoginBloc(sl(), sl(),sl(),sl()));
      sl.registerFactory(() => HomeBloc(sl(),sl(),sl(),sl(),sl()));
      sl.registerFactory(() => AddCarForSaleBloc(sl(),sl(),sl()));
      sl.registerFactory(() => AddOfferBloc(sl(),sl()));
