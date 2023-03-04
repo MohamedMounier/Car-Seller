@@ -76,7 +76,10 @@ class BidsRemoteDataSource implements BaseBidsRemoteDataSource{
 
   @override
   Future<void> addOffer(OfferModel offer)async {
-    return await fireStore.collection(BidsFireStoreConsts.offers).doc(offer.traderUid).collection(BidsFireStoreConsts.traderOffers).doc(offer.saleId).set(offer.toFireStore());
+     //await fireStore.collection(BidsFireStoreConsts.offers).doc(offer.traderUid).collection(BidsFireStoreConsts.traderOffers).doc(offer.saleId).set(offer.toFireStore());
+    return await fireStore.collection(BidsFireStoreConsts.offers).doc(offer.traderUid).set({'Offer':'Success'}).then((value) {
+      fireStore.collection(BidsFireStoreConsts.offers).doc(offer.traderUid).collection(BidsFireStoreConsts.traderOffers).doc(offer.saleId).set(offer.toFireStore());
+    });
 
   }
 

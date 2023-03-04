@@ -136,14 +136,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     ));
 
     final result = await getUserUseCase(GetUserUseCaseParameters(
-      userId: state.userUid,
+      userId: appPrefrences.fetchSavedUserUid(),
       isTrader: state.isTrader,
     ));
     result.fold(
-        (l) => emit(state.copyWith(
-            requestState: RequestState.isError, errorMessage: l.errorMessage,
-          step: HomeScreenDataSteps.isFetchingUserInfoError
-        )),
+
+        (l) {
+          print('user uid in error fetching user is ${state.userUid} ');
+          print('user type trader?  in error fetching user is ${state.isTrader} ');
+          emit(state.copyWith(
+              requestState: RequestState.isError, errorMessage: l.errorMessage,
+              step: HomeScreenDataSteps.isFetchingUserInfoError
+          )
+          );
+        } ,
         (r) {
           print('user uid is ${state.userUid} ');
           print('user type trader?  is ${state.isTrader} ');

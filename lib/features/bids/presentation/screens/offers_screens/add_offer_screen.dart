@@ -1,15 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voomeg/core/enums/enums.dart';
-import 'package:voomeg/core/global/id_generator.dart';
 import 'package:voomeg/core/global/resources/size_config.dart';
 import 'package:voomeg/core/global/resources/values_manager.dart';
 import 'package:voomeg/features/bids/domain/entities/offer.dart';
-import 'package:voomeg/features/bids/presentation/components/home_components.dart';
-import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/offers_blocs/add_offer_bloc.dart';
-import 'package:voomeg/features/bids/presentation/controller/offers_blocs/add_offer_bloc.dart';
+import 'package:voomeg/reusable/toasts/app_toastss.dart';
 import 'package:voomeg/reusable/widgets/car_carouser_slider.dart';
 import 'package:voomeg/reusable/widgets/editable_text.dart';
 import 'package:voomeg/reusable/widgets/info_raw_medium.dart';
@@ -26,8 +22,14 @@ class AddOfferScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AddOfferBloc, AddOfferState>(
+      listenWhen: (previous,current){
+        return previous.addOfferRequest!=current.addOfferRequest;
+      },
       listener: (context, state) {
-        // TODO: implement listener
+        if(state.addOfferRequest ==RequestState.isSucc){
+          ScaffoldMessenger.of(context).showSnackBar(snackBarToast(text: 'Your Offer Has been sent so seller', isError: false));
+          Navigator.pop(context);
+        }
       },
       child: Scaffold(
         appBar: AppBar(title: Text('Offer A Price'),),
@@ -106,8 +108,6 @@ class AddOfferScreen extends StatelessWidget {
                        padding: const EdgeInsets.symmetric(horizontal: AppPading.p20,vertical: AppPading.p20),
                        child: ElevatedButton(
                            onPressed: () {
-                             print('current  trader  id who who adds now  ${state.currentTrader!.id}');
-                             print('current  user   id from sale while adding now ${state.currentTrader!.id}');
                              validateOffer(
                                  ctx: context,
                                  salePrice: state.carForSale!.reservePrice,
@@ -126,7 +126,7 @@ class AddOfferScreen extends StatelessWidget {
                              );
 
                            },
-                           child: Text('Send Offer')),
+                           child: state.addOfferRequest==RequestState.isLoading?CircularProgressIndicator():Text('Send Offer')),
                      )
                    ],
                  ),
@@ -143,7 +143,7 @@ class AddOfferScreen extends StatelessWidget {
      if(num.parse(priceCtrl.text)>salePrice!){
        func();
      }else{
-       ScaffoldMessenger.of(ctx!).showSnackBar(SnackBar(content: Text('Your offer price should be more than Minimum sale price')));
+       ScaffoldMessenger.of(ctx!).showSnackBar(snackBarToast(text: 'Your offer price should be more than Minimum sale price',isError: true));
      }
     }
   }
