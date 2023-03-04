@@ -9,12 +9,11 @@ import 'package:voomeg/core/enums/enums.dart';
 import 'package:voomeg/core/global/id_generator.dart';
 import 'package:voomeg/core/global/resources/size_config.dart';
 import 'package:voomeg/core/global/resources/values_manager.dart';
-import 'package:voomeg/core/global/routes/app_router.dart';
 import 'package:voomeg/core/global/routes/app_routes_names.dart';
 
-import 'package:voomeg/features/bids/data/models/car_for_sale_model.dart';
 import 'package:voomeg/features/bids/domain/entities/for_sale_cars.dart';
 import 'package:voomeg/features/bids/presentation/controller/add_car_for_sale_bloc.dart';
+import 'package:voomeg/reusable/toasts/app_toastss.dart';
 import 'package:voomeg/reusable/widgets/editable_text.dart';
 
 class AddCarScreen extends StatelessWidget {
@@ -191,12 +190,21 @@ class AddCarScreen extends StatelessWidget {
                           ? Center(
                               child: IconButton(
                                   onPressed: () {
-                                    state.isUploading
-                                        ? null
-                                        : chooseImage(
+                                    if(state.isUploading){
+                                      null;
+                                    }else{
+                                      if(state.imagesList==5){
+                                        chooseImage(
                                             context, state.imagesList);
+
+
+                                      }else{
+                                        editImages(context, state.imagesList);
+                                      }
+                                    }
+
                                   },
-                                  icon: Icon(Icons.add)),
+                                  icon:  state.imagesList.length!=5?Icon(Icons.add):const Icon(Icons.edit)),
                             )
                           : Container(
                               decoration: BoxDecoration(
@@ -211,7 +219,6 @@ class AddCarScreen extends StatelessWidget {
 
   Future<void> chooseImage(BuildContext context, List<XFile> images) async {
     final picker = await ImagePicker().pickMultiImage(imageQuality: 100);
-    // ImagePicker().pickMultiImage()
 
     print('Images list length ${images.length}');
     //images.clear();
@@ -219,8 +226,27 @@ class AddCarScreen extends StatelessWidget {
     if (picker.isNotEmpty) {
       if (picker.length > 5 || images.length == 5) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Maximum pictures count is 5 pictures ')));
+            snackBarToast(text: 'Maximum pictures count is 5 pictures ',isError: true));
       } else {
+        BlocProvider.of<AddCarForSaleBloc>(context)
+            .add(ChoosePicturesEvent(picker));
+      }
+    } else {
+      print(picker);
+    }
+  }
+  Future<void> editImages(BuildContext context, List<XFile> images) async {
+    final picker = await ImagePicker().pickMultiImage(imageQuality: 100);
+
+    print('Images list length ${images.length}');
+    //images.clear();
+
+    if (picker.isNotEmpty) {
+      if (picker.length > 5) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            snackBarToast(text: 'Maximum pictures count is 5 pictures ',isError: true));
+      } else {
+
         BlocProvider.of<AddCarForSaleBloc>(context)
             .add(ChoosePicturesEvent(picker));
       }

@@ -12,6 +12,7 @@ import 'package:voomeg/features/bids/presentation/controller/home_bloc.dart';
 import 'package:voomeg/features/bids/presentation/controller/offers_blocs/user_offers_bloc.dart';
 import 'package:voomeg/reusable/widgets/error_widget.dart';
 import 'package:voomeg/reusable/widgets/loading_widget.dart';
+import 'package:voomeg/reusable/widgets/no_data_widget.dart';
 
 import '../../../auth/presentation/controller/login_bloc.dart';
 
@@ -47,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             state.requestState == RequestState.isSucc&&state.currentNavBarIndex==1) {
           BlocProvider.of<HomeBloc>(context).add(ResetHomeDataEvent());
         //  Navigator.pushReplacementNamed(context, AppRoutesName.login);
-          BlocProvider.of<LoginBloc>(context).add(ChangeUserTypeEvent(false));
+          BlocProvider.of<LoginBloc>(context).add(SaveUserTypeEvent(false));
 
           Future.delayed(Duration(milliseconds: 100),()=> Navigator.pushReplacementNamed(context, AppRoutesName.login));
         }
@@ -141,25 +142,30 @@ class _HomeScreenState extends State<HomeScreen> {
             );
   }
 
-  ListView userCarsList(HomeState state) {
-    return ListView.builder(
-                  itemCount: state.carsForSaleList.length,
-                  itemBuilder: (context, index) {
-                    return HomeComponents(
-                      userUid: state.currentUser!.id,
-                      userFunction: () {
-                        BlocProvider.of<UserOffersBloc>(context).add(GetCurrentSaleEvent(state.carsForSaleList[index]));
+  Widget userCarsList(HomeState state) {
+    if(state.carsForSaleList.isEmpty){
+      return Center(child: NoDataWidget(message: 'You have no cars for selling yet , Add your car to sell'),);
+    }else{
+      return ListView.builder(
+          itemCount: state.carsForSaleList.length,
+          itemBuilder: (context, index) {
+            return HomeComponents(
+              userUid: state.currentUser!.id,
+              userFunction: () {
+                BlocProvider.of<UserOffersBloc>(context).add(GetCurrentSaleEvent(state.carsForSaleList[index]));
 
-                        BlocProvider.of<UserOffersBloc>(context).add(FetchOffersForCarEvent(state.currentUser!.id,state.carsForSaleList[index].saleId));
-                       Navigator.pushNamed(context, AppRoutesName.userOffers);
-                      },
+                BlocProvider.of<UserOffersBloc>(context).add(FetchOffersForCarEvent(state.currentUser!.id,state.carsForSaleList[index].saleId));
+                Navigator.pushNamed(context, AppRoutesName.userOffers);
+              },
 
-                      traderFunction: () {},
-                      car: state.carsForSaleList[index],
-                      imageUrl: state.carsForSaleList[index].photosUrls[0],
-                      imagesList: state.carsForSaleList[index].photosUrls,
-                    );
-                  });
+              traderFunction: () {},
+              car: state.carsForSaleList[index],
+              imageUrl: state.carsForSaleList[index].photosUrls[0],
+              imagesList: state.carsForSaleList[index].photosUrls,
+            );
+          });
+
+    }
   }
 
 }

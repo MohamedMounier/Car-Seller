@@ -63,15 +63,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
   FutureOr<void> onSaveUserUid(SaveUserUidEvent event, Emitter<LoginState> emit)async {
     emit(state.copyWith(requestState: RequestState.isLoading,loginSteps: LoginSteps.isSavingUserUid));
-    var result = await appPrefrences.saveUserUid(event.userUid!);
+    var result = await appPrefrences.saveUserUid(state.user!.user!.uid);
     result.fold((l) {
       emit(state.copyWith(requestState: RequestState.isError,loginSteps: LoginSteps.isSavingUserUidError,loginErrorMessage: l.errorMessage));
     }, (r) {
       if(r){
-        emit(state.copyWith(userUid: event.userUid,loginSteps: LoginSteps.isSavingUserUidSuccess,requestState: RequestState.isSucc));
+
+        emit(state.copyWith(userUid: state.user!.user!.uid,loginSteps: LoginSteps.isSavingUserUidSuccess,requestState: RequestState.isSucc));
+        print(' user id sent from login is and saved uid is true ${state.user!.user!.uid}');
 
       }else{
-        emit(state.copyWith(userUid: event.userUid,loginSteps: LoginSteps.isSavingUserUidError));
+        emit(state.copyWith(userUid:state.user!.user!.uid,loginSteps: LoginSteps.isSavingUserUidError));
+        print(' user id sent from login is saved uid is false ${state.user!.user!.uid}');
 
       }
 

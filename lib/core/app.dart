@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         create: (_)=>RegisterBloc(sl(), sl())),
 
         BlocProvider<LoginBloc>(
-            create: (_)=>LoginBloc(sl(),sl(),sl())),
+            create: (_)=>LoginBloc(sl(),sl(),sl())..add(SaveUserTypeEvent(false))),
         BlocProvider<HomeBloc>(
             create: (_)=>HomeBloc(sl(),sl(),sl(),sl(),sl())),
         BlocProvider<AddCarForSaleBloc>(

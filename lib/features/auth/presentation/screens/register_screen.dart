@@ -36,7 +36,6 @@ class RegisterScreen extends StatelessWidget {
               isTrader: state.isTrader,
               phone: phoneCtrl.text)));
         } else if (state.requestState == RequestState.isLoading) {
-          ScaffoldMessenger.of(context).showSnackBar(snackBarToast(text: 'Loading', isError: false));
 
         } else if (state.requestState == RequestState.isSucc &&
             state.registerStep == RegisterSteps.isAddedUser) {

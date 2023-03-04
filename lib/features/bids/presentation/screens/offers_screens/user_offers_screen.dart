@@ -11,6 +11,7 @@ import 'package:voomeg/reusable/toasts/app_toastss.dart';
 import 'package:voomeg/reusable/widgets/car_carouser_slider.dart';
 import 'package:voomeg/reusable/widgets/error_widget.dart';
 import 'package:voomeg/reusable/widgets/loading_widget.dart';
+import 'package:voomeg/reusable/widgets/no_data_widget.dart';
 import 'package:voomeg/reusable/widgets/price_row.dart';
 import 'package:voomeg/reusable/widgets/raw_info_headline.dart';
 
@@ -103,7 +104,7 @@ class UserOffersScreen extends StatelessWidget {
                           }),
                     ):Center(child: Padding(
                       padding: const EdgeInsets.only(top: 40.0),
-                      child: Text('No Offers Yet'),
+                      child: NoDataWidget(message: 'No Offers Yet'),
                     ),),
                   ],
                 ),
