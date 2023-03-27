@@ -6,11 +6,4 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+That's an app for 2 types of users , the seller and he upload his car on the application with a minimum price to get offers from traders with more than that price , on the other hand we have the trader side which can check all uploaded cars and sends his offer for the chosen car to the user who uploaded this car , in app you can register and login as trader or user and do all the functionalities mentioned above either as a trader or a seller 
